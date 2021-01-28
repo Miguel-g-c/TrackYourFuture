@@ -1,12 +1,14 @@
 from rest_framework import serializers
-from .models import User, Currency, Account, IncomeCategory, Income, ExpenseCategory, Expense, AssetCategory, AssetBuy, AssetSell
+from .models import User, Currency, Account, IncomeCategory, \
+    Income, ExpenseCategory, Expense, AssetCategory, \
+    AssetBuy, AssetSell
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'first', 'last',
-                  'email', 'active', 'last_login', 'joined')
+        fields = ('id', 'username', 'first_name', 'last_name',
+                  'email', 'last_login', 'date_joined')
 
 
 class CurrencySerializer(serializers.ModelSerializer):
