@@ -28,7 +28,7 @@ class Account(models.Model):
 
 
 class IncomeCategory(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
@@ -60,10 +60,19 @@ class Income(models.Model):
 
 
 class ExpenseCategory(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
+
+
+class ExpenseSubCategory(models.Model):
+    category = models.ForeignKey(
+        ExpenseCategory, on_delete=models.CASCADE, related_name="subcategories")
+    name = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return f"{self.category.name}: {self.name}"
 
 
 class Expense(models.Model):
@@ -82,6 +91,9 @@ class Expense(models.Model):
     category = models.ForeignKey(
         ExpenseCategory, on_delete=models.RESTRICT, related_name="expenses")
 
+    subcategory = models.ForeignKey(
+        ExpenseSubCategory, on_delete=models.RESTRICT, related_name="expenses")
+
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -92,7 +104,7 @@ class Expense(models.Model):
 
 
 class AssetCategory(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name

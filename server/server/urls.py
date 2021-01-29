@@ -26,25 +26,29 @@ router.register(r'currencies', views.CurrencyView, 'currency')
 router.register(r'accounts', views.AccountView, 'account')
 
 router.register(r'categories/income',
-                views.IncomeCategoryView, 'incomecategories')
+                views.IncomeCategoryView, 'income_categories')
 
 router.register(r'categories/expense',
-                views.ExpenseCategoryView, 'expensecategories')
+                views.ExpenseCategoryView, 'expense_categories')
+
+router.register(r'categories/expensesub',
+                views.ExpenseSubCategoryView, 'expense_subcategories')
 
 router.register(r'categories/asset',
-                views.AssetCategoryView, 'assetcategories')
+                views.AssetCategoryView, 'asset_categories')
 
 router.register(r'incomes', views.IncomeView, 'income')
 router.register(r'expenses', views.ExpenseView, 'expense')
 
 router.register(r'assets/bought',
-                views.AssetBuyView, 'assetbought')
+                views.AssetBuyView, 'asset_bought')
 
 router.register(r'assets/sold',
-                views.AssetSellView, 'assetsold')
+                views.AssetSellView, 'asset_sold')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls'))
 ]
