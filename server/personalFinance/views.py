@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import permissions
+from rest_framework import permissions, status
 from .models import User, Currency, Account, IncomeCategory, \
     Income, ExpenseCategory, Expense, AssetCategory, \
     AssetBuy, AssetSell, ExpenseSubCategory
-from .serializers import UserSerializer, CurrencySerializer, \
+from .serializers import UserSerializer, UserSerializerWithToken, CurrencySerializer, \
     AccountSerializer, IncomeCategorySerializer, IncomeSerializer, \
     ExpenseCategorySerializer, ExpenseSerializer, AssetCategorySerializer, \
     AssetBuySerializer, AssetSellSerializer, ExpenseSubCategorySerializer
@@ -20,6 +21,19 @@ class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-last_login')
     permission_classes = (permissions.AllowAny,)
 
+    def post(self, request, format=None):
+        serializer = UserSerializerWithToken(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def current_user(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
 
 class CurrencyView(viewsets.ModelViewSet):
     serializer_class = CurrencySerializer
@@ -29,7 +43,6 @@ class CurrencyView(viewsets.ModelViewSet):
 class AccountView(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class IncomeCategoryView(viewsets.ModelViewSet):
@@ -55,22 +68,18 @@ class AssetCategoryView(viewsets.ModelViewSet):
 class IncomeView(viewsets.ModelViewSet):
     serializer_class = IncomeSerializer
     queryset = Income.objects.all().order_by('-timestamp')
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class ExpenseView(viewsets.ModelViewSet):
     serializer_class = ExpenseSerializer
     queryset = Expense.objects.all().order_by('-timestamp')
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class AssetBuyView(viewsets.ModelViewSet):
     serializer_class = AssetBuySerializer
     queryset = AssetBuy.objects.all().order_by('-timestamp')
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class AssetSellView(viewsets.ModelViewSet):
     serializer_class = AssetSellSerializer
     queryset = AssetSell.objects.all().order_by('-timestamp')
-    permission_classes = [permissions.IsAuthenticated]
