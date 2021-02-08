@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token
 from personalFinance import views
 
 
@@ -50,5 +51,6 @@ router.register(r'assets/sold',
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls'))
+    path('api-auth/', include('rest_framework.urls')),
+    path('token-auth/', obtain_jwt_token)
 ]

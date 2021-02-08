@@ -1,6 +1,12 @@
 import React from 'react'
-import { Image, keyframes, usePrefersReducedMotion } from '@chakra-ui/react'
-import logo from './logo.svg'
+import {
+  Image,
+  keyframes,
+  usePrefersReducedMotion,
+  useColorMode,
+} from '@chakra-ui/react'
+import logoLight from './tyf200x200_light.png'
+import logoDark from './tyf200x200_dark.png'
 
 const spin = keyframes`
   from { transform: rotate(0deg); }
@@ -9,10 +15,17 @@ const spin = keyframes`
 
 export const Logo = props => {
   const prefersReducedMotion = usePrefersReducedMotion()
+  const { colorMode } = useColorMode()
 
   const animation = prefersReducedMotion
     ? undefined
     : `${spin} infinite 20s linear`
 
-  return <Image animation={animation} src={logo} {...props} />
+  return (
+    <Image
+      animation={animation}
+      src={colorMode === 'light' ? logoLight : logoDark}
+      {...props}
+    />
+  )
 }

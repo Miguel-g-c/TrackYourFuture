@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Currency, Account, IncomeCategory, Income, ExpenseCategory, Expense, AssetCategory, AssetBuy, AssetSell
+from .models import Currency, Account, IncomeCategory, Income, \
+    ExpenseCategory, Expense, AssetCategory, AssetBuy, AssetSell, \
+    ExpenseSubCategory
 
 # Register your models here.
 
@@ -9,6 +11,7 @@ admin.site.register([
     IncomeCategory,
     Income,
     ExpenseCategory,
+    ExpenseSubCategory,
     Expense,
     AssetCategory,
     AssetBuy,

@@ -39,13 +39,23 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'personalFinance',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'personalFinance'
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
+
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -123,7 +133,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ORIGIN_WHITELIST = [
     'https://localhost:3000'
 
+]
+
+CORS_ORIGIN_REGEX_WHITELIST = [
+    'http://localhost:3000',
 ]
