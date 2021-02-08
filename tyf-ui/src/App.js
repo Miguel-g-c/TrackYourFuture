@@ -21,96 +21,73 @@ function App() {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
   const [user, setUser] = useState(null)
 
-  const fetchCurrentUser = () => {
-    axios
-      .get(`${server}api/current-user/`, {
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await axios.get(`${server}api/current-user/`, {
         responseType: 'json',
         headers: {
           Authorization: `JWT ${localStorage.getItem('token')}`,
         },
       })
-      .then(response => {
-        if (response.status == 200) {
-          return response.data
-        } else {
-          console.log(response.status, response.statusText)
-          return null
-        }
-      })
-      .catch(error => {
-        console.error(error)
-      })
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  const login = (username, password) => {
-    axios
-      .post(`${server}token-auth/`, {
-        responseType: 'json',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: {
-          username: username,
-          password: password,
-        },
-      })
-      .then(response => {
-        if (response.status == 200) {
-          localStorage.setItem('token', response.data.token)
-          setIsUserAuthenticated(true)
-          setUser(response.data.user)
-        } else {
-          console.log(response.status, response.statusText)
-          setIsUserAuthenticated(false)
-          setUser(null)
-        }
-      })
-      .catch(error => {
-        console.error(error)
-      })
+  const login = async (username, password) => {
+    const data = {
+      username: username,
+      password: password,
+    }
+    const config = {
+      responseType: 'json',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    try {
+      const response = await axios.post(`${server}token-auth/`, data, config)
+
+      return response.data.user
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const logout = () => {
     localStorage.removeItem('token')
-    setIsUserAuthenticated(false)
-    setUser(null)
   }
 
-  const signup = (username, password, firstName, lastName, email) => {
-    axios
-      .post(`${server}api/users`, {
-        responseType: 'json',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: {
-          username: username,
-          password: password,
-          fistName: firstName,
-          lastName: lastName,
-          email: email,
-        },
-      })
-      .then(response => {
-        if (response.status == 200) {
-          localStorage.setItem('token', response.data.token)
-          setIsUserAuthenticated(true)
-          setUser(response.data.user)
-        } else {
-          console.log(response.status, response.statusText)
-          setIsUserAuthenticated(false)
-          setUser(null)
-        }
-      })
-      .catch(error => {
-        console.error(error)
-      })
+  const signup = async (username, password, firstName, lastName, email) => {
+    const data = {
+      username: username,
+      password: password,
+      fistName: firstName,
+      lastName: lastName,
+      email: email,
+    }
+    const config = {
+      responseType: 'json',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    try {
+      const response = await axios.post(`${server}api/users/`, data, config)
+
+      return response.data.user
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  useEffect(() => {
-    if (isUserAuthenticated) {
-      const user = fetchCurrentUser()
+  useEffect(async () => {
+    if (localStorage.getItem('token')) {
+      const user = await fetchCurrentUser()
       setUser(user)
+      setIsUserAuthenticated(true)
     }
   }, [])
 
@@ -137,7 +114,13 @@ function App() {
             <Button
               colorScheme="blue"
               size="sm"
-              onClick={login('Miguel', 'super1234')}
+              onClick={async event => {
+                event.preventDefault()
+                const user = await login('Miguel', 'super1234')
+                console.log(user)
+                setUser(user)
+                setIsUserAuthenticated(true)
+              }}
             >
               Login Miguel
             </Button>
@@ -145,12 +128,26 @@ function App() {
             <Button
               colorScheme="blue"
               size="sm"
-              onClick={login('Monic', '1234')}
+              onClick={async event => {
+                event.preventDefault()
+                const user = await login('Monic', '1234')
+                setUser(user)
+                setIsUserAuthenticated(true)
+              }}
             >
               Login Monic
             </Button>
             ;
-            <Button colorScheme="teal" size="sm" onClick={logout()}>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              onClick={event => {
+                event.preventDefault()
+                logout()
+                setIsUserAuthenticated(false)
+                setUser(null)
+              }}
+            >
               Logout
             </Button>
             ;
@@ -158,13 +155,18 @@ function App() {
               colorScheme="teal"
               variant="outline"
               size="md"
-              onClick={signup(
-                'Pedro',
-                '1234',
-                'Pedro',
-                'Garcia',
-                'pedro@example.com'
-              )}
+              onClick={async event => {
+                event.preventDefault()
+                const user = await signup(
+                  'Pedro',
+                  '1234',
+                  'Pedro',
+                  'Garcia',
+                  'pedro@example.com'
+                )
+                setUser(user)
+                setIsUserAuthenticated(true)
+              }}
             >
               Signup
             </Button>
