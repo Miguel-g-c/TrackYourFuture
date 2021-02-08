@@ -51,6 +51,6 @@ router.register(r'assets/sold',
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/current-user', views.current_user, name='current-user'),
+    path('api/current-user/', views.current_user, name='current-user'),
     path('token-auth/', obtain_jwt_token)
 ]

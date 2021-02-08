@@ -8,6 +8,7 @@ import {
   VStack,
   Code,
   Grid,
+  Button,
   theme,
 } from '@chakra-ui/react'
 import { ColorModeSwitcher } from './components/ColorModeSwitcher'
@@ -15,26 +16,102 @@ import { ColorModeSwitcher } from './components/ColorModeSwitcher'
 import { Logo } from './Logo'
 
 function App() {
-  const api = 'http://127.0.0.1:8000/api/'
+  const server = 'http://127.0.0.1:8000/'
 
-  const [userAuthenticated, setUserAuthenticated] = useState(null)
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
+  const [user, setUser] = useState(null)
 
-  useEffect(async () => {
-    await axios
-      .get(`${api}current-user`, {
+  const fetchCurrentUser = () => {
+    axios
+      .get(`${server}api/current-user/`, {
         responseType: 'json',
+        headers: {
+          Authorization: `JWT ${localStorage.getItem('token')}`,
+        },
       })
       .then(response => {
-        if (response.data.id) {
-          setUserAuthenticated(response.data)
-          console.log(response.data)
+        if (response.status == 200) {
+          return response.data
         } else {
-          console.log(response.data)
+          console.log(response.status, response.statusText)
+          return null
         }
       })
       .catch(error => {
         console.error(error)
       })
+  }
+
+  const login = (username, password) => {
+    axios
+      .post(`${server}token-auth/`, {
+        responseType: 'json',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          username: username,
+          password: password,
+        },
+      })
+      .then(response => {
+        if (response.status == 200) {
+          localStorage.setItem('token', response.data.token)
+          setIsUserAuthenticated(true)
+          setUser(response.data.user)
+        } else {
+          console.log(response.status, response.statusText)
+          setIsUserAuthenticated(false)
+          setUser(null)
+        }
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+
+  const logout = () => {
+    localStorage.removeItem('token')
+    setIsUserAuthenticated(false)
+    setUser(null)
+  }
+
+  const signup = (username, password, firstName, lastName, email) => {
+    axios
+      .post(`${server}api/users`, {
+        responseType: 'json',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          username: username,
+          password: password,
+          fistName: firstName,
+          lastName: lastName,
+          email: email,
+        },
+      })
+      .then(response => {
+        if (response.status == 200) {
+          localStorage.setItem('token', response.data.token)
+          setIsUserAuthenticated(true)
+          setUser(response.data.user)
+        } else {
+          console.log(response.status, response.statusText)
+          setIsUserAuthenticated(false)
+          setUser(null)
+        }
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+
+  useEffect(() => {
+    if (isUserAuthenticated) {
+      const user = fetchCurrentUser()
+      setUser(user)
+    }
   }, [])
 
   return (
@@ -45,8 +122,8 @@ function App() {
           <VStack spacing={8}>
             <Logo h="20vmin" pointerEvents="none" />
             <Text>
-              Hey {userAuthenticated ? userAuthenticated.username : 'Stranger'}:
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
+              Hey {isUserAuthenticated ? user.username : 'Stranger'}: Edit
+              <Code fontSize="xl">src/App.js</Code> and save to reload.
             </Text>
             <Link
               color="teal.500"
@@ -57,6 +134,40 @@ function App() {
             >
               Learn Chakra
             </Link>
+            <Button
+              colorScheme="blue"
+              size="sm"
+              onClick={login('Miguel', 'super1234')}
+            >
+              Login Miguel
+            </Button>
+            ;
+            <Button
+              colorScheme="blue"
+              size="sm"
+              onClick={login('Monic', '1234')}
+            >
+              Login Monic
+            </Button>
+            ;
+            <Button colorScheme="teal" size="sm" onClick={logout()}>
+              Logout
+            </Button>
+            ;
+            <Button
+              colorScheme="teal"
+              variant="outline"
+              size="md"
+              onClick={signup(
+                'Pedro',
+                '1234',
+                'Pedro',
+                'Garcia',
+                'pedro@example.com'
+              )}
+            >
+              Signup
+            </Button>
           </VStack>
         </Grid>
       </Box>

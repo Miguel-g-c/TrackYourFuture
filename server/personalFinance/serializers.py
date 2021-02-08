@@ -22,8 +22,8 @@ class UserSerializer(serializers.ModelSerializer):
 class UserSerializerWithToken(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('token', 'username', 'password', 'first_name',
-                  'last_name', 'email')
+        fields = ('token', 'id', 'username', 'password',
+                  'first_name', 'last_name', 'email')
 
     token = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True)
