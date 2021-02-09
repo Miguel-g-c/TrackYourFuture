@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import {
   ChakraProvider,
   Box,
@@ -14,78 +13,17 @@ import {
 import { ColorModeSwitcher } from './components/ColorModeSwitcher'
 //import { TYFSidebar } from './components/Sidebar'
 import { Logo } from './Logo'
+import AuthenticationService from './services/authentication.service.js'
 
 function App() {
-  const server = 'http://127.0.0.1:8000/'
+  const authenticationService = new AuthenticationService()
 
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
   const [user, setUser] = useState(null)
 
-  const fetchCurrentUser = async () => {
-    try {
-      const response = await axios.get(`${server}api/current-user/`, {
-        responseType: 'json',
-        headers: {
-          Authorization: `JWT ${localStorage.getItem('token')}`,
-        },
-      })
-
-      return response.data
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const login = async (username, password) => {
-    const data = {
-      username: username,
-      password: password,
-    }
-    const config = {
-      responseType: 'json',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-    try {
-      const response = await axios.post(`${server}token-auth/`, data, config)
-
-      return response.data.user
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const logout = () => {
-    localStorage.removeItem('token')
-  }
-
-  const signup = async (username, password, firstName, lastName, email) => {
-    const data = {
-      username: username,
-      password: password,
-      fistName: firstName,
-      lastName: lastName,
-      email: email,
-    }
-    const config = {
-      responseType: 'json',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-    try {
-      const response = await axios.post(`${server}api/users/`, data, config)
-
-      return response.data.user
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   useEffect(async () => {
     if (localStorage.getItem('token')) {
-      const user = await fetchCurrentUser()
+      const user = await authenticationService.fetchCurrentUser()
       setUser(user)
       setIsUserAuthenticated(true)
     }
@@ -116,8 +54,10 @@ function App() {
               size="sm"
               onClick={async event => {
                 event.preventDefault()
-                const user = await login('Miguel', 'super1234')
-                console.log(user)
+                const user = await authenticationService.login(
+                  'Miguel',
+                  'super1234'
+                )
                 setUser(user)
                 setIsUserAuthenticated(true)
               }}
@@ -130,7 +70,7 @@ function App() {
               size="sm"
               onClick={async event => {
                 event.preventDefault()
-                const user = await login('Monic', '1234')
+                const user = await authenticationService.login('Monic', '1234')
                 setUser(user)
                 setIsUserAuthenticated(true)
               }}
@@ -143,7 +83,7 @@ function App() {
               size="sm"
               onClick={event => {
                 event.preventDefault()
-                logout()
+                authenticationService.logout()
                 setIsUserAuthenticated(false)
                 setUser(null)
               }}
@@ -157,7 +97,7 @@ function App() {
               size="md"
               onClick={async event => {
                 event.preventDefault()
-                const user = await signup(
+                const user = await authenticationService.signup(
                   'Pedro',
                   '1234',
                   'Pedro',
