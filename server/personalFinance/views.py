@@ -18,7 +18,7 @@ from .serializers import UserSerializer, UserSerializerWithToken, CurrencySerial
 
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
-    queryset = User.objects.all().order_by('-last_login')
+    queryset = User.objects.all()
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):

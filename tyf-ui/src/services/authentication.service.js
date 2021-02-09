@@ -34,7 +34,7 @@ class AuthenticationService {
         data,
         config
       )
-
+      localStorage.setItem('token', response.data.token)
       return response.data.user
     } catch (error) {
       console.error(error)
@@ -45,13 +45,13 @@ class AuthenticationService {
     localStorage.removeItem('token')
   }
 
-  async signup(username, password, email, firstName, lastName) {
+  async signup(username, password, email, first_name, last_name) {
     const data = JSON.stringify({
       username,
       password,
       email,
-      firstName,
-      lastName,
+      first_name,
+      last_name,
     })
     const config = {
       responseType: 'json',
@@ -65,8 +65,7 @@ class AuthenticationService {
         data,
         config
       )
-
-      return response.data.user
+      return response.data
     } catch (error) {
       console.error(error)
     }

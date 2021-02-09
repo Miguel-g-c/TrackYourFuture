@@ -11,9 +11,8 @@ import {
   theme,
 } from '@chakra-ui/react'
 import { ColorModeSwitcher } from './components/ColorModeSwitcher'
-//import { TYFSidebar } from './components/Sidebar'
-import { Logo } from './Logo'
-import AuthenticationService from './services/authentication.service.js'
+import { Navbar } from './components/Navbar'
+import AuthenticationService from './services/authentication.service'
 
 function App() {
   const authenticationService = new AuthenticationService()
@@ -31,11 +30,11 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
+      <Navbar name="Sign up" />
       <Box textAlign="center" fontSize="xl">
         <Grid minH="100vh" p={3}>
           <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={8}>
-            <Logo h="20vmin" pointerEvents="none" />
             <Text>
               Hey {isUserAuthenticated ? user.username : 'Stranger'}: Edit
               <Code fontSize="xl">src/App.js</Code> and save to reload.
@@ -98,11 +97,11 @@ function App() {
               onClick={async event => {
                 event.preventDefault()
                 const user = await authenticationService.signup(
-                  'Pedro',
+                  'Ramon',
                   '1234',
-                  'Pedro',
-                  'Garcia',
-                  'pedro@example.com'
+                  'ramon@example.com',
+                  'Ramon',
+                  'Garcia'
                 )
                 setUser(user)
                 setIsUserAuthenticated(true)
