@@ -1,27 +1,59 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Flex, Box, Button, Spacer } from '@chakra-ui/react'
+import {
+  Flex,
+  Box,
+  Center,
+  Button,
+  ButtonGroup,
+  Spacer,
+  useColorModeValue,
+} from '@chakra-ui/react'
+import { BiLogInCircle, BiLogOutCircle, BiUserCircle } from 'react-icons/bi'
 import { TYFLogo } from './TYFLogo'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
+import './Navbar.css'
 
 export const Navbar = props => {
+  const bg = useColorModeValue(
+    'linear(to-tr, gray.400, blue.100)',
+    'linear(to-tr, black, purple.900)'
+  )
+
   return (
-    <Flex borderWidth="2px">
-      <Box width="160px" overflow="hidden">
+    <Flex as="nav" className="navbar" bgGradient={bg}>
+      <Box>
         <TYFLogo />
       </Box>
       <Spacer />
-      <Box>
-        <Button colorScheme="teal" mr="4">
-          {props.name}
-        </Button>
-        <Button colorScheme="teal">Log in</Button>
-        <ColorModeSwitcher justifySelf="flex-end" />
-      </Box>
+      <Center>
+        {props.isUserAuthenticated ? (
+          <Button
+            leftIcon={<BiLogOutCircle />}
+            size="sm"
+            variant="outline"
+            colorScheme="teal"
+            onClick={props.handleLogout}
+          >
+            Logout
+          </Button>
+        ) : (
+          <ButtonGroup size="sm" variant="outline" spacing="2">
+            <Button leftIcon={<BiLogInCircle />} colorScheme="teal">
+              Login
+            </Button>
+            <Button leftIcon={<BiUserCircle />} colorScheme="teal">
+              Register
+            </Button>
+          </ButtonGroup>
+        )}
+        <ColorModeSwitcher ml="2" mr="2" />
+      </Center>
     </Flex>
   )
 }
 
 Navbar.propTypes = {
-  name: PropTypes.string.isRequired,
+  isUserAuthenticated: PropTypes.bool.isRequired,
+  handleLogout: PropTypes.func.isRequired,
 }

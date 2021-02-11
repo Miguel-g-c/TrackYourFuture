@@ -10,9 +10,9 @@ import {
   Button,
   theme,
 } from '@chakra-ui/react'
-import { ColorModeSwitcher } from './components/ColorModeSwitcher'
 import { Navbar } from './components/Navbar'
 import AuthenticationService from './services/authentication.service'
+import './App.css'
 
 function App() {
   const authenticationService = new AuthenticationService()
@@ -28,12 +28,21 @@ function App() {
     }
   }, [])
 
+  function handleLogout(event) {
+    event.preventDefault()
+    authenticationService.logout()
+    setIsUserAuthenticated(false)
+    setUser(null)
+  }
+
   return (
     <ChakraProvider theme={theme}>
-      <Navbar name="Sign up" />
-      <Box textAlign="center" fontSize="xl">
+      <Navbar
+        isUserAuthenticated={isUserAuthenticated}
+        handleLogout={event => handleLogout(event)}
+      />
+      <Box className="main" textAlign="center" fontSize="xl">
         <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={8}>
             <Text>
               Hey {isUserAuthenticated ? user.username : 'Stranger'}: Edit
