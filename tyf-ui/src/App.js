@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { ChakraProvider, Box, Grid, theme } from '@chakra-ui/react'
 import { Navbar } from './components/Navbar'
+import { Footer } from './components/Footer'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -49,7 +50,7 @@ function App() {
       <ChakraProvider theme={theme}>
         <Navbar user={user} handleLogout={handleLogout} />
         <Box className="main" textAlign="center" fontSize="xl">
-          <Grid minH="100vh" p={3}>
+          <Grid minH="90vh" p={3}>
             <Switch>
               <Route path="/login">
                 <Login handleLogin={event => handleLogin(event)} />
@@ -63,6 +64,7 @@ function App() {
             </Switch>
           </Grid>
         </Box>
+        <Footer />
       </ChakraProvider>
     </Router>
   )
