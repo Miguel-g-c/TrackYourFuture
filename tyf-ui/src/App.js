@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom'
 import { ChakraProvider, Box, Grid, theme } from '@chakra-ui/react'
 import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer'
@@ -13,6 +18,9 @@ function App() {
   const authenticationService = new AuthenticationService()
 
   const [user, setUser] = useState(null)
+  function userHandler(user) {
+    setUser(user)
+  }
 
   useEffect(async () => {
     if (localStorage.getItem('token')) {
@@ -20,12 +28,6 @@ function App() {
       setUser(user)
     }
   }, [])
-
-  async function handleLogin(event) {
-    event.preventDefault()
-    const user = await authenticationService.login('Miguel', 'super1234')
-    setUser(user)
-  }
 
   async function handleRegister(event) {
     event.preventDefault()
@@ -39,8 +41,7 @@ function App() {
     setUser(user)
   }
 
-  function handleLogout(event) {
-    event.preventDefault()
+  function handleLogout() {
     authenticationService.logout()
     setUser(null)
   }
@@ -50,13 +51,21 @@ function App() {
       <ChakraProvider theme={theme}>
         <Navbar user={user} handleLogout={handleLogout} />
         <Box className="main" textAlign="center" fontSize="xl">
-          <Grid minH="90vh" p={3}>
+          <Grid minH="90vh">
             <Switch>
               <Route path="/login">
-                <Login handleLogin={event => handleLogin(event)} />
+                {user ? (
+                  <Redirect to="/" />
+                ) : (
+                  <Login userHandler={userHandler} />
+                )}
               </Route>
               <Route path="/register">
-                <Register handleRegister={event => handleRegister(event)} />
+                {user ? (
+                  <Redirect to="/" />
+                ) : (
+                  <Register handleRegister={handleRegister} />
+                )}
               </Route>
               <Route path="/">
                 <Home user={user} />

@@ -49,18 +49,21 @@ export const Footer = () => {
           <IconButton
             as="a"
             href="https://www.linkedin.com/in/miguel-garcia-casas-b0b683145/"
+            target="_blank"
             aria-label="LinkedIn"
             icon={<FaLinkedin />}
           />
           <IconButton
             as="a"
             href="https://github.com/Miguel-g-c"
+            target="_blank"
             aria-label="Github"
             icon={<FaGithub />}
           />
           <IconButton
             as="a"
             href="https://miguel-g-c.github.io/"
+            target="_blank"
             aria-label="Miguel García Casas"
             icon={<FaEnvelope />}
           />

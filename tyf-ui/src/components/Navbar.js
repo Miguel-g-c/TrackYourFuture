@@ -36,7 +36,10 @@ export const Navbar = props => {
             size="sm"
             variant="outline"
             colorScheme="teal"
-            onClick={event => props.handleLogout(event)}
+            onClick={event => {
+              event.preventDefault()
+              props.handleLogout()
+            }}
           >
             Logout
           </Button>

@@ -28,17 +28,9 @@ class AuthenticationService {
         'Content-Type': 'application/json',
       },
     }
-    try {
-      const response = await axios.post(
-        `${this.server}token-auth/`,
-        data,
-        config
-      )
-      localStorage.setItem('token', response.data.token)
-      return response.data.user
-    } catch (error) {
-      console.error(error)
-    }
+    const response = await axios.post(`${this.server}token-auth/`, data, config)
+    localStorage.setItem('token', response.data.token)
+    return response.data.user
   }
 
   logout() {
