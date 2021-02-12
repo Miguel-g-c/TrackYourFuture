@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
 import { TYFLogo } from './TYFLogo'
+import './Footer.css'
 
 export const Footer = () => {
   const bg = useColorModeValue(

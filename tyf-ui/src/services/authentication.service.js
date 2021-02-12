@@ -51,16 +51,8 @@ class AuthenticationService {
         'Content-Type': 'application/json',
       },
     }
-    try {
-      const response = await axios.post(
-        `${this.server}api/users/`,
-        data,
-        config
-      )
-      return response.data
-    } catch (error) {
-      console.error(error)
-    }
+    const response = await axios.post(`${this.server}api/users/`, data, config)
+    return response.data
   }
 }
 

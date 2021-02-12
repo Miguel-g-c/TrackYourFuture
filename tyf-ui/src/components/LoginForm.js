@@ -50,7 +50,10 @@ export const LoginForm = props => {
             name="username"
             type="text"
             isRequired
-            onChange={event => setUsername(event.currentTarget.value)}
+            onChange={event => {
+              setError('')
+              setUsername(event.currentTarget.value)
+            }}
           />
         </FormControl>
         <FormControl id="password">
@@ -60,7 +63,10 @@ export const LoginForm = props => {
               name="password"
               type={showPassword ? 'text' : 'password'}
               isRequired
-              onChange={event => setPassword(event.currentTarget.value)}
+              onChange={event => {
+                setError('')
+                setPassword(event.currentTarget.value)
+              }}
             />
             <InputRightElement width="3rem">
               <Button h="1.5rem" size="sm" onClick={handlePasswordVisibility}>

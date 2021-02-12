@@ -29,18 +29,6 @@ function App() {
     }
   }, [])
 
-  async function handleRegister(event) {
-    event.preventDefault()
-    const user = await authenticationService.signup(
-      'Ramon',
-      '1234',
-      'ramon@example.com',
-      'Ramon',
-      'Garcia'
-    )
-    setUser(user)
-  }
-
   function handleLogout() {
     authenticationService.logout()
     setUser(null)
@@ -54,7 +42,7 @@ function App() {
           className="main"
           textAlign="center"
           fontSize="xl"
-          minH={{ base: '75vh', md: '85vh', lg: '90vh' }}
+          minH={{ base: '60vh', md: '75vh', lg: '85vh' }}
         >
           <Switch>
             <Route path="/login">
@@ -64,7 +52,7 @@ function App() {
               {user ? (
                 <Redirect to="/" />
               ) : (
-                <Register handleRegister={handleRegister} />
+                <Register userHandler={userHandler} />
               )}
             </Route>
             <Route path="/">
