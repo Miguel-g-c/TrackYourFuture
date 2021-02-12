@@ -11,14 +11,12 @@ import './App.css'
 function App() {
   const authenticationService = new AuthenticationService()
 
-  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
   const [user, setUser] = useState(null)
 
   useEffect(async () => {
     if (localStorage.getItem('token')) {
       const user = await authenticationService.fetchCurrentUser()
       setUser(user)
-      setIsUserAuthenticated(true)
     }
   }, [])
 
@@ -26,7 +24,6 @@ function App() {
     event.preventDefault()
     const user = await authenticationService.login('Miguel', 'super1234')
     setUser(user)
-    setIsUserAuthenticated(true)
   }
 
   async function handleRegister(event) {
@@ -39,23 +36,18 @@ function App() {
       'Garcia'
     )
     setUser(user)
-    setIsUserAuthenticated(true)
   }
 
   function handleLogout(event) {
     event.preventDefault()
     authenticationService.logout()
-    setIsUserAuthenticated(false)
     setUser(null)
   }
 
   return (
     <Router>
       <ChakraProvider theme={theme}>
-        <Navbar
-          isUserAuthenticated={isUserAuthenticated}
-          handleLogout={event => handleLogout(event)}
-        />
+        <Navbar user={user} handleLogout={handleLogout} />
         <Box className="main" textAlign="center" fontSize="xl">
           <Grid minH="100vh" p={3}>
             <Switch>
@@ -66,7 +58,7 @@ function App() {
                 <Register handleRegister={event => handleRegister(event)} />
               </Route>
               <Route path="/">
-                <Home isUserAuthenticated={isUserAuthenticated} user={user} />
+                <Home user={user} />
               </Route>
             </Switch>
           </Grid>

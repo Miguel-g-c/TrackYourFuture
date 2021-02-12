@@ -1,6 +1,11 @@
 .navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 9999;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.active > button {
+  background: rgba(129, 230, 217, 0.05);
+  border: 2px solid;
 }

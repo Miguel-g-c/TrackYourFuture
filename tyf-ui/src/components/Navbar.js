@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link, NavLink } from 'react-router-dom'
 import {
   Flex,
   Box,
@@ -23,28 +24,34 @@ export const Navbar = props => {
   return (
     <Flex as="nav" className="navbar" bgGradient={bg}>
       <Box>
-        <TYFLogo />
+        <Link to="/">
+          <TYFLogo />
+        </Link>
       </Box>
       <Spacer />
       <Center>
-        {props.isUserAuthenticated ? (
+        {props.user ? (
           <Button
             leftIcon={<BiLogOutCircle />}
             size="sm"
             variant="outline"
             colorScheme="teal"
-            onClick={props.handleLogout}
+            onClick={event => props.handleLogout(event)}
           >
             Logout
           </Button>
         ) : (
           <ButtonGroup size="sm" variant="outline" spacing="2">
-            <Button leftIcon={<BiLogInCircle />} colorScheme="teal">
-              Login
-            </Button>
-            <Button leftIcon={<BiUserCircle />} colorScheme="teal">
-              Register
-            </Button>
+            <NavLink to="/login">
+              <Button leftIcon={<BiLogInCircle />} colorScheme="teal">
+                Login
+              </Button>
+            </NavLink>
+            <NavLink to="/register">
+              <Button leftIcon={<BiUserCircle />} colorScheme="teal">
+                Register
+              </Button>
+            </NavLink>
           </ButtonGroup>
         )}
         <ColorModeSwitcher ml="2" mr="2" />
@@ -54,6 +61,6 @@ export const Navbar = props => {
 }
 
 Navbar.propTypes = {
-  isUserAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.object,
   handleLogout: PropTypes.func.isRequired,
 }
