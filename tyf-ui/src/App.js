@@ -5,8 +5,9 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom'
-import { ChakraProvider, Box, theme } from '@chakra-ui/react'
+import { ChakraProvider, Box, theme, useDisclosure } from '@chakra-ui/react'
 import { Navbar } from './components/Navbar'
+import { Sidebar } from './components/Sidebar'
 import { Footer } from './components/Footer'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -16,6 +17,8 @@ import './App.css'
 
 function App() {
   const authenticationService = new AuthenticationService()
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [user, setUser] = useState(null)
   function userHandler(user) {
@@ -37,13 +40,14 @@ function App() {
   return (
     <Router>
       <ChakraProvider theme={theme}>
-        <Navbar user={user} handleLogout={handleLogout} />
+        <Navbar user={user} handleLogout={handleLogout} handleOpen={onOpen} />
         <Box
           className="main"
           textAlign="center"
           fontSize="xl"
           minH={{ base: '60vh', md: '75vh', lg: '85vh' }}
         >
+          <Sidebar isOpen={isOpen} onClose={onClose} />
           <Switch>
             <Route path="/login">
               {user ? <Redirect to="/" /> : <Login userHandler={userHandler} />}

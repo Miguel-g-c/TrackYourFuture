@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  FormHelperText,
   Stack,
   CircularProgress,
 } from '@chakra-ui/react'
@@ -132,6 +133,11 @@ export const RegisterForm = props => {
             errorBorderColor="crimson"
             onChange={event => handleOnChange(event, setConfirmPassword)}
           />
+          {notMatch && (
+            <FormHelperText textAlign="left">
+              Passwords don&apos;t match
+            </FormHelperText>
+          )}
         </FormControl>
         <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
           {isLoading ? (

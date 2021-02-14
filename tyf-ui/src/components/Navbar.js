@@ -6,11 +6,13 @@ import {
   Box,
   Center,
   Button,
+  IconButton,
   ButtonGroup,
   Spacer,
   useColorModeValue,
 } from '@chakra-ui/react'
 import { BiLogInCircle, BiLogOutCircle, BiUserCircle } from 'react-icons/bi'
+import { GoThreeBars } from 'react-icons/go'
 import { TYFLogo } from './TYFLogo'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import './Navbar.css'
@@ -23,6 +25,18 @@ export const Navbar = props => {
 
   return (
     <Flex as="nav" className="navbar" bgGradient={bg}>
+      {props.user && (
+        <Center pl="3">
+          <IconButton
+            variant="ghost"
+            colorScheme="blue"
+            aria-label="Sidebar toggler"
+            fontSize="25px"
+            icon={<GoThreeBars />}
+            onClick={props.handleOpen}
+          />
+        </Center>
+      )}
       <Box>
         <Link to="/">
           <TYFLogo />
@@ -36,8 +50,7 @@ export const Navbar = props => {
             size="sm"
             variant="outline"
             colorScheme="teal"
-            onClick={event => {
-              event.preventDefault()
+            onClick={() => {
               props.handleLogout()
             }}
           >
@@ -66,4 +79,5 @@ export const Navbar = props => {
 Navbar.propTypes = {
   user: PropTypes.object,
   handleLogout: PropTypes.func.isRequired,
+  handleOpen: PropTypes.func.isRequired,
 }

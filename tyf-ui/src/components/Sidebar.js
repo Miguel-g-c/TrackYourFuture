@@ -1,64 +1,60 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
-  Sidebar,
-  InputItem,
-  DropdownItem,
-  Icon,
-  Item,
-  Logo,
-  LogoText,
-} from 'react-sidebar-ui'
-import { useColorMode } from '@chakra-ui/react'
-import { TYFLogo } from './TYFLogo'
-import 'react-sidebar-ui/dist/index.css'
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  Button,
+  Input,
+  Image,
+  Center,
+  useColorModeValue,
+} from '@chakra-ui/react'
+import lightLogo from './static/tyf_light.png'
+import darkLogo from './static/tyf_dark.png'
 
-export const TYFSidebar = () => {
-  const { colorMode } = useColorMode()
+export const Sidebar = props => {
+  const logo = useColorModeValue(lightLogo, darkLogo)
+
   return (
-    <Sidebar
-      bgColor={colorMode === 'light' ? 'light' : 'black'}
-      isCollapsed={false}
+    <Drawer
+      isOpen={props.isOpen}
+      placement="left"
+      onClose={props.onClose}
+      returnFocusOnClose={false}
     >
-      <Logo src={TYFLogo} imageName="TrackYourFuture logo" />
-      <LogoText>TrackYourFuture</LogoText>
-      <DropdownItem
-        values={['First', 'Second', 'Third']}
-        bgColor={colorMode === 'light' ? 'light' : 'black'}
-      >
-        Menu
-      </DropdownItem>
+      <DrawerOverlay className="sidebar" style={{ zIndex: 9999 }}>
+        <DrawerContent>
+          <DrawerHeader>
+            <Center>
+              <Image className="sidebar-item" src={logo} />
+            </Center>
+          </DrawerHeader>
 
-      <Item bgColor={colorMode === 'light' ? 'light' : 'black'}>
-        <Icon>
-          <i className="fas fa-home" />
-        </Icon>
-        Home
-      </Item>
-      <Item bgColor={colorMode === 'light' ? 'light' : 'black'}>
-        <Icon>
-          <i className="fas fa-info" />
-        </Icon>
-        About
-      </Item>
-      <Item bgColor={colorMode === 'light' ? 'light' : 'black'}>
-        <Icon>
-          <i className="fas fa-sitemap" />
-        </Icon>
-        My Website
-      </Item>
-      <Item bgColor={colorMode === 'light' ? 'light' : 'black'}>
-        <Icon>
-          <i className="far fa-address-book" />
-        </Icon>
-        Contacts
-      </Item>
-      <Item bgColor={colorMode === 'light' ? 'light' : 'black'}>
-        <Icon>
-          <i className="fas fa-rss-square" />
-        </Icon>
-        Blog
-      </Item>
-      <InputItem type="text" placeholder={'Search...'} />
-    </Sidebar>
+          <DrawerBody>
+            <Input placeholder="Type here..." />
+          </DrawerBody>
+
+          <DrawerFooter>
+            <Button
+              variant="outline"
+              colorScheme="blue"
+              mr={3}
+              onClick={props.onClose}
+            >
+              Cancel
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </DrawerOverlay>
+    </Drawer>
   )
+}
+
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
