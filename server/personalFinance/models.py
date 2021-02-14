@@ -129,8 +129,8 @@ class AssetBuy(models.Model):
     timestamp = models.DateTimeField()
 
     def save(self, *args, **kwargs):
-        if timestamp is None:
-            timestamp = datetime.now()
+        if self.timestamp is None:
+            self.timestamp = datetime.now()
         super(AssetBuy, self).save(*args, **kwargs)
 
     def __str__(self):

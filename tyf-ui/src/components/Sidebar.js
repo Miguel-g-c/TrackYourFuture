@@ -3,16 +3,18 @@ import PropTypes from 'prop-types'
 import {
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  Button,
-  Input,
+  DrawerCloseButton,
   Image,
   Center,
+  Button,
   useColorModeValue,
 } from '@chakra-ui/react'
+import { MdDashboard, MdSettings } from 'react-icons/md'
+import { GiReceiveMoney, GiPayMoney } from 'react-icons/gi'
+import { AiOutlineStock } from 'react-icons/ai'
 import lightLogo from './static/tyf_light.png'
 import darkLogo from './static/tyf_dark.png'
 
@@ -24,30 +26,65 @@ export const Sidebar = props => {
       isOpen={props.isOpen}
       placement="left"
       onClose={props.onClose}
+      autoFocus={false}
       returnFocusOnClose={false}
     >
       <DrawerOverlay className="sidebar" style={{ zIndex: 9999 }}>
         <DrawerContent>
           <DrawerHeader>
+            <DrawerCloseButton />
             <Center>
               <Image className="sidebar-item" src={logo} />
             </Center>
           </DrawerHeader>
 
           <DrawerBody>
-            <Input placeholder="Type here..." />
-          </DrawerBody>
-
-          <DrawerFooter>
             <Button
+              leftIcon={<MdDashboard />}
+              colorScheme="teal"
               variant="outline"
-              colorScheme="blue"
-              mr={3}
-              onClick={props.onClose}
+              isFullWidth
+              my={2}
             >
-              Cancel
+              Dashboard
             </Button>
-          </DrawerFooter>
+            <Button
+              leftIcon={<MdSettings />}
+              colorScheme="teal"
+              variant="outline"
+              isFullWidth
+              my={2}
+            >
+              Account settings
+            </Button>
+            <Button
+              leftIcon={<GiReceiveMoney />}
+              colorScheme="teal"
+              variant="outline"
+              isFullWidth
+              my={2}
+            >
+              Incomes
+            </Button>
+            <Button
+              leftIcon={<GiPayMoney />}
+              colorScheme="teal"
+              variant="outline"
+              isFullWidth
+              my={2}
+            >
+              Expenses
+            </Button>
+            <Button
+              leftIcon={<AiOutlineStock />}
+              colorScheme="teal"
+              variant="outline"
+              isFullWidth
+              my={2}
+            >
+              Assets
+            </Button>
+          </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>
     </Drawer>
