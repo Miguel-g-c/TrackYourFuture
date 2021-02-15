@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Drawer,
@@ -12,7 +12,7 @@ import {
   Button,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { MdDashboard } from 'react-icons/md'
 import { GiReceiveMoney, GiPayMoney } from 'react-icons/gi'
 import { AiOutlineStock } from 'react-icons/ai'
@@ -21,6 +21,7 @@ import darkLogo from './static/tyf_dark.png'
 
 export const Sidebar = props => {
   const logo = useColorModeValue(lightLogo, darkLogo)
+  const location = useLocation()
   const [active, setActive] = useState({
     dashboard: false,
     incomes: false,
@@ -28,15 +29,15 @@ export const Sidebar = props => {
     assets: false,
   })
 
-  function handleClick(property) {
-    for (const prop in active) {
-      if (property === prop) {
-        setActive(prevActive => ({ ...prevActive, [prop]: true }))
+  useEffect(() => {
+    for (const property in active) {
+      if (location.pathname.replace('/', '') === property) {
+        setActive(prevActive => ({ ...prevActive, [property]: true }))
       } else {
-        setActive(prevActive => ({ ...prevActive, [prop]: false }))
+        setActive(prevActive => ({ ...prevActive, [property]: false }))
       }
     }
-  }
+  }, [location])
 
   return (
     <Drawer
@@ -65,7 +66,6 @@ export const Sidebar = props => {
                 justifyContent="flex-start"
                 isFullWidth
                 isActive={active.dashboard}
-                onClick={() => handleClick('dashboard')}
                 my={2}
               >
                 Dashboard
@@ -80,7 +80,6 @@ export const Sidebar = props => {
                 justifyContent="flex-start"
                 isFullWidth
                 isActive={active.incomes}
-                onClick={() => handleClick('incomes')}
                 my={2}
               >
                 Incomes
@@ -95,7 +94,6 @@ export const Sidebar = props => {
                 justifyContent="flex-start"
                 isFullWidth
                 isActive={active.expenses}
-                onClick={() => handleClick('expenses')}
                 my={2}
               >
                 Expenses
@@ -110,7 +108,6 @@ export const Sidebar = props => {
                 justifyContent="flex-start"
                 isFullWidth
                 isActive={active.assets}
-                onClick={() => handleClick('assets')}
                 my={2}
               >
                 Assets

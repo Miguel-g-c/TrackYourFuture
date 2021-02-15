@@ -33,7 +33,7 @@ export const RegisterForm = props => {
   const [last, setLast] = useState('')
   const [email, setEmail] = useState('')
   const [currencies, setCurrencies] = useState([])
-  const [currency, setCurrency] = useState('')
+  const [currency, setCurrency] = useState('EUR')
   const [amount, setAmount] = useState('5000.00')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -53,23 +53,33 @@ export const RegisterForm = props => {
     }
   }, [password, confirmPassword])
 
-  /* 
-  const getCurrencySymbol = ticker => {
+  function getCurrencySymbol(ticker) {
     return currencies.reduce(
-      (a, obj) => (obj.ticker === ticker && a.push(obj.symbol), a),
+      (a, obj) => (
+        obj.ticker === ticker && a.push([obj.symbol, obj.position]), a
+      ),
       []
     )[0]
   }
- */
 
-  const format = val => {
-    if (currency === 'USD') return `$ ${val}`
-    return `${val} €`
+  function getCurrencyID(ticker) {
+    return currencies.reduce(
+      (a, obj) => (obj.ticker === ticker && a.push(obj.id), a),
+      []
+    )[0]
   }
 
-  const parse = val => {
-    if (currency === 'USD') return val.replace(/^\$/, '').trim()
-    return val.replace(/^€/, '').trim()
+  function format(val) {
+    if (currencies.length === 0) return val
+    const [symbol, position] = getCurrencySymbol(currency)
+    if (position === 'start') return `${symbol} ${val}`
+    return `${val} ${symbol}`
+  }
+
+  function parse(val) {
+    if (currencies.length === 0) return val
+    const symbol = getCurrencySymbol(currency)[0]
+    return val.replace(`${symbol}`, '').trim()
   }
 
   const handleSubmit = async event => {
@@ -90,6 +100,17 @@ export const RegisterForm = props => {
         first,
         last
       )
+      try {
+        await personalFinanceService.createAccount(
+          user.id,
+          getCurrencyID(currency),
+          amount
+        )
+      } catch (error) {
+        setError('Account problem try again')
+        setIsLoading(false)
+      }
+
       setIsLoading(false)
       props.userHandler(user)
     } catch (error) {
@@ -197,9 +218,11 @@ export const RegisterForm = props => {
                 setAmount(parse(valueString))
               }}
               value={format(amount)}
+              min={0}
               max={99999999.99}
               precision={2}
               step={0.25}
+              pattern={null}
             >
               <NumberInputField />
               <NumberInputStepper>

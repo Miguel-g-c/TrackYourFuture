@@ -19,6 +19,22 @@ class PersonalFinanceService {
       console.error(error)
     }
   }
+
+  async createAccount(user, currency, amount) {
+    const data = JSON.stringify({
+      user,
+      currency,
+      amount,
+    })
+    const config = {
+      responseType: 'json',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const response = await axios.post(`${this.server}accounts/`, data, config)
+    return response.data
+  }
 }
 
 export default PersonalFinanceService

@@ -42,7 +42,7 @@ class UserSerializerWithToken(serializers.ModelSerializer):
 class CurrencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Currency
-        fields = ('id', 'name', 'ticker', 'symbol')
+        fields = ('id', 'name', 'ticker', 'symbol', 'position')
 
 
 class AccountSerializer(serializers.ModelSerializer):

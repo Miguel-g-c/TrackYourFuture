@@ -4,11 +4,21 @@ from datetime import datetime
 
 
 class Currency(models.Model):
+    START = 'start'
+    END = 'end'
+    POSITION_CHOICES = [
+        (START, 'start'),
+        (END, 'end')
+    ]
+
     name = models.CharField(max_length=64)
 
     ticker = models.CharField(max_length=3)
 
     symbol = models.CharField(max_length=1)
+
+    position = models.CharField(
+        max_length=5, choices=POSITION_CHOICES, default=END)
 
     def __str__(self):
         return f"{self.name}, {self.ticker}"
