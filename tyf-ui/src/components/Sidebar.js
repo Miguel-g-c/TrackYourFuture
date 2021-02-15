@@ -13,7 +13,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import { MdDashboard, MdSettings } from 'react-icons/md'
+import { MdDashboard } from 'react-icons/md'
 import { GiReceiveMoney, GiPayMoney } from 'react-icons/gi'
 import { AiOutlineStock } from 'react-icons/ai'
 import lightLogo from './static/tyf_light.png'
@@ -23,7 +23,6 @@ export const Sidebar = props => {
   const logo = useColorModeValue(lightLogo, darkLogo)
   const [active, setActive] = useState({
     dashboard: false,
-    account: false,
     incomes: false,
     expenses: false,
     assets: false,
@@ -70,21 +69,6 @@ export const Sidebar = props => {
                 my={2}
               >
                 Dashboard
-              </Button>
-            </Link>
-            <Link to="/account">
-              <Button
-                leftIcon={<MdSettings />}
-                colorScheme="teal"
-                variant="ghost"
-                height="35px"
-                justifyContent="flex-start"
-                isFullWidth
-                isActive={active.account}
-                onClick={() => handleClick('account')}
-                my={2}
-              >
-                Account
               </Button>
             </Link>
             <Link to="/incomes">

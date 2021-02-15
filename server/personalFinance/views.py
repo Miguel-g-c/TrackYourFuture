@@ -35,34 +35,40 @@ def current_user(request):
     return Response(serializer.data)
 
 
-class CurrencyView(viewsets.ModelViewSet):
-    serializer_class = CurrencySerializer
-    queryset = Currency.objects.all()
-
-
 class AccountView(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
+    permission_classes = (permissions.AllowAny,)
+
+
+class CurrencyView(viewsets.ModelViewSet):
+    serializer_class = CurrencySerializer
+    queryset = Currency.objects.all()
+    permission_classes = (permissions.AllowAny,)
 
 
 class IncomeCategoryView(viewsets.ModelViewSet):
     serializer_class = IncomeCategorySerializer
     queryset = IncomeCategory.objects.all()
+    permission_classes = (permissions.AllowAny,)
 
 
 class ExpenseCategoryView(viewsets.ModelViewSet):
     serializer_class = ExpenseCategorySerializer
     queryset = ExpenseCategory.objects.all()
+    permission_classes = (permissions.AllowAny,)
 
 
 class ExpenseSubCategoryView(viewsets.ModelViewSet):
     serializer_class = ExpenseSubCategorySerializer
     queryset = ExpenseSubCategory.objects.all()
+    permission_classes = (permissions.AllowAny,)
 
 
 class AssetCategoryView(viewsets.ModelViewSet):
     serializer_class = AssetCategorySerializer
     queryset = AssetCategory.objects.all()
+    permission_classes = (permissions.AllowAny,)
 
 
 class IncomeView(viewsets.ModelViewSet):

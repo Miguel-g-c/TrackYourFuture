@@ -13,7 +13,7 @@ function Register(props) {
     >
       <Box maxW={{ sm: 'md' }} mx={{ sm: 'auto' }} w={{ sm: 'full' }}>
         <Heading mt="6" textAlign="center" size="2xl" fontWeight="bold">
-          Create your account
+          Create your Account
         </Heading>
       </Box>
       <Box maxW={{ sm: 'md' }} mx={{ sm: 'auto' }} mt="8" w={{ sm: 'full' }}>

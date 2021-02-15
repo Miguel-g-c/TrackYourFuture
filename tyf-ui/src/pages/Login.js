@@ -13,7 +13,7 @@ function Login(props) {
     >
       <Box maxW={{ sm: 'md' }} mx={{ sm: 'auto' }} w={{ sm: 'full' }}>
         <Heading mt="6" textAlign="center" size="2xl" fontWeight="bold">
-          Sign in to your account
+          Sign in to your Account
         </Heading>
       </Box>
       <Box maxW={{ sm: 'md' }} mx={{ sm: 'auto' }} mt="8" w={{ sm: 'full' }}>
