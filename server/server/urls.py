@@ -52,5 +52,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/current-user/', views.current_user, name='current-user'),
+    path('api-auth/', include('rest_framework.urls')),
     path('token-auth/', obtain_jwt_token)
 ]
