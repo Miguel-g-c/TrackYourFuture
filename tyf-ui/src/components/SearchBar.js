@@ -9,7 +9,7 @@ export const SearchBar = props => {
       <InputLeftElement pointerEvents="none">
         <FaSearchDollar />
       </InputLeftElement>
-      <Input type="text" placeholder="Search expenses by name" />
+      <Input height="32px" type="text" placeholder="Search expenses by name" />
     </InputGroup>
   )
 }
