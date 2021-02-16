@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import permissions, status
+from django_filters import rest_framework as filters
 from .models import User, Currency, Account, IncomeCategory, \
     Income, ExpenseCategory, Expense, AssetCategory, \
     AssetBuy, AssetSell, ExpenseSubCategory
@@ -39,6 +40,8 @@ class AccountView(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
     permission_classes = (permissions.AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('user',)
 
 
 class CurrencyView(viewsets.ModelViewSet):

@@ -12,6 +12,7 @@ import { Footer } from './components/Footer'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Expenses from './pages/Expenses'
 import AuthenticationService from './services/authentication.service'
 import './App.css'
 
@@ -53,6 +54,9 @@ function App() {
               ) : (
                 <Register userHandler={userHandler} />
               )}
+            </Route>
+            <Route path="/expenses">
+              {user ? <Expenses user={user} /> : <Redirect to="/" />}
             </Route>
             <Route path="/">
               <Home user={user} />
