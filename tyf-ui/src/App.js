@@ -14,10 +14,12 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Expenses from './pages/Expenses'
 import AuthenticationService from './services/authentication.service'
+import PersonalFinanceService from './services/personalFinance.service'
 import './App.css'
 
 function App() {
   const authenticationService = new AuthenticationService()
+  const personalFinanceService = new PersonalFinanceService()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -25,13 +27,23 @@ function App() {
   function userHandler(user) {
     setUser(user)
   }
+  const [account, setAccount] = useState(null)
 
   useEffect(async () => {
     if (localStorage.getItem('token')) {
-      const user = await authenticationService.fetchCurrentUser()
-      setUser(user)
+      const currentUser = await authenticationService.fetchCurrentUser()
+      setUser(currentUser)
     }
   }, [])
+
+  useEffect(async () => {
+    if (user) {
+      const currentAccount = await personalFinanceService.fetchAccountByUser(
+        user.id
+      )
+      setAccount(currentAccount)
+    }
+  }, [user])
 
   function handleLogout() {
     authenticationService.logout()
@@ -56,7 +68,11 @@ function App() {
               )}
             </Route>
             <Route path="/expenses">
-              {user ? <Expenses user={user} /> : <Redirect to="/" />}
+              {user ? (
+                <Expenses user={user} account={account} />
+              ) : (
+                <Redirect to="/" />
+              )}
             </Route>
             <Route path="/">
               <Home user={user} />
