@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   Flex,
   Box,
@@ -22,6 +22,22 @@ export const Navbar = props => {
     'linear(to-tr, gray.400, blue.100)',
     'linear(to-tr, black, purple.900)'
   )
+  const location = useLocation()
+
+  const [active, setActive] = useState({
+    login: false,
+    register: false,
+  })
+
+  useEffect(() => {
+    for (const property in active) {
+      if (location.pathname.replace('/', '') === property) {
+        setActive(prevActive => ({ ...prevActive, [property]: true }))
+      } else {
+        setActive(prevActive => ({ ...prevActive, [property]: false }))
+      }
+    }
+  }, [location])
 
   return (
     <Flex as="nav" className="navbar" bgGradient={bg}>
@@ -48,8 +64,10 @@ export const Navbar = props => {
           <Button
             leftIcon={<BiLogOutCircle />}
             size="sm"
-            variant="outline"
+            variant="ghost"
             colorScheme="teal"
+            fontSize="15px"
+            width="100px"
             onClick={() => {
               props.handleLogout()
             }}
@@ -57,14 +75,26 @@ export const Navbar = props => {
             Logout
           </Button>
         ) : (
-          <ButtonGroup size="sm" variant="outline" spacing="2">
+          <ButtonGroup size="sm" spacing="2">
             <NavLink to="/login">
-              <Button leftIcon={<BiLogInCircle />} colorScheme="teal">
+              <Button
+                leftIcon={<BiLogInCircle />}
+                colorScheme="teal"
+                fontSize="15px"
+                width="100px"
+                variant={active.login ? 'outline' : 'ghost'}
+              >
                 Login
               </Button>
             </NavLink>
             <NavLink to="/register">
-              <Button leftIcon={<BiUserCircle />} colorScheme="teal">
+              <Button
+                leftIcon={<BiUserCircle />}
+                colorScheme="teal"
+                fontSize="15px"
+                width="100px"
+                variant={active.register ? 'outline' : 'ghost'}
+              >
                 Register
               </Button>
             </NavLink>

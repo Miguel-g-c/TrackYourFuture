@@ -53,7 +53,7 @@ export const RegisterForm = props => {
     }
   }, [password, confirmPassword])
 
-  function getCurrencySymbol(ticker) {
+  function getCurrencySymbolandPosition(ticker) {
     return currencies.reduce(
       (a, obj) => (
         obj.ticker === ticker && a.push([obj.symbol, obj.position]), a
@@ -71,14 +71,14 @@ export const RegisterForm = props => {
 
   function format(val) {
     if (currencies.length === 0) return val
-    const [symbol, position] = getCurrencySymbol(currency)
+    const [symbol, position] = getCurrencySymbolandPosition(currency)
     if (position === 'start') return `${symbol} ${val}`
     return `${val} ${symbol}`
   }
 
   function parse(val) {
     if (currencies.length === 0) return val
-    const symbol = getCurrencySymbol(currency)[0]
+    const symbol = getCurrencySymbolandPosition(currency)[0]
     return val.replace(`${symbol}`, '').trim()
   }
 

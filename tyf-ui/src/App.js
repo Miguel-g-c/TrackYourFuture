@@ -41,12 +41,7 @@ function App() {
     <Router>
       <ChakraProvider theme={theme}>
         <Navbar user={user} handleLogout={handleLogout} handleOpen={onOpen} />
-        <Box
-          className="main"
-          textAlign="center"
-          fontSize="xl"
-          minH={{ base: '60vh', md: '75vh', lg: '85vh' }}
-        >
+        <Box className="main" textAlign="center" fontSize="xl" minH="100vh">
           <Sidebar isOpen={isOpen} onClose={onClose} />
           <Switch>
             <Route path="/login">
