@@ -25,11 +25,30 @@ function Expenses(props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [categories, setCategories] = useState([])
+  const [subcategories, setSubcategories] = useState([])
+
+  const [category, setCategory] = useState(null)
+  const [subcategory, setSubcategory] = useState(null)
 
   useEffect(async () => {
     const serverCategories = await personalFinanceService.fetchExpenseCategories()
     setCategories(serverCategories)
   }, [])
+
+  useEffect(() => {
+    const categoryObj = categories.find(
+      element => element.id === Number(category)
+    )
+    if (categoryObj) {
+      setSubcategories(categoryObj.subcategories)
+    } else setSubcategories([])
+    return () => setSubcategory(null)
+  }, [category])
+
+  const handleOnChange = (event, set) => {
+    console.log(subcategory)
+    set(event.currentTarget.value)
+  }
 
   return (
     <Box bg={useColorModeValue('gray.50', 'inherit')} minH="100vh" width="100%">
@@ -66,14 +85,28 @@ function Expenses(props) {
                 height="30px"
                 width="155px"
                 bg={bg}
-              />
+                onChange={event => handleOnChange(event, setCategory)}
+              >
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </Select>
               <Select
                 placeholder="All subcategories"
                 size="sm"
                 height="30px"
                 width="155px"
                 bg={bg}
-              />
+                onChange={event => handleOnChange(event, setSubcategory)}
+              >
+                {subcategories.map(subcategory => (
+                  <option key={subcategory.id} value={subcategory.id}>
+                    {subcategory.name}
+                  </option>
+                ))}
+              </Select>
             </Stack>
           </Stack>
           <Button

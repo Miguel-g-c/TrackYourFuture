@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import permissions, status
+from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 from .models import User, Currency, Account, IncomeCategory, \
     Income, ExpenseCategory, Expense, AssetCategory, \
@@ -15,6 +16,9 @@ from .serializers import UserSerializer, UserSerializerWithToken, CurrencySerial
 
 
 # Create your views here.
+
+class StandardPagination(PageNumberPagination):
+    page_size=10
 
 
 class UserView(viewsets.ModelViewSet):
@@ -77,11 +81,17 @@ class AssetCategoryView(viewsets.ModelViewSet):
 class IncomeView(viewsets.ModelViewSet):
     serializer_class = IncomeSerializer
     queryset = Income.objects.all().order_by('-timestamp')
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('user',)
+    pagination_class = StandardPagination
 
 
 class ExpenseView(viewsets.ModelViewSet):
     serializer_class = ExpenseSerializer
     queryset = Expense.objects.all().order_by('-timestamp')
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('user',)
+    pagination_class = StandardPagination
 
 
 class AssetBuyView(viewsets.ModelViewSet):
