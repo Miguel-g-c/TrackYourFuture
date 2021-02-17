@@ -8,7 +8,6 @@ import {
   InputGroup,
   InputRightElement,
   Stack,
-  CircularProgress,
 } from '@chakra-ui/react'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
 import { ErrorMessage } from '../components/ErrorMessage'
@@ -75,12 +74,14 @@ export const LoginForm = props => {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
-          {isLoading ? (
-            <CircularProgress isIndeterminate size="25px" color="blue" />
-          ) : (
-            'Sign In'
-          )}
+        <Button
+          type="submit"
+          colorScheme="blue"
+          size="lg"
+          fontSize="md"
+          isLoading={isLoading}
+        >
+          Sign in
         </Button>
       </Stack>
     </form>

@@ -20,6 +20,21 @@ class PersonalFinanceService {
     }
   }
 
+  async fetchExpenseCategories() {
+    try {
+      const response = await axios.get(`${this.server}categories/expense/`, {
+        responseType: 'json',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   async createAccount(user, currency, amount) {
     const data = JSON.stringify({
       user,
@@ -52,6 +67,35 @@ class PersonalFinanceService {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  async addExpense(
+    user,
+    name,
+    description,
+    amount,
+    currency,
+    category,
+    subcategory
+  ) {
+    const data = JSON.stringify({
+      user,
+      name,
+      description,
+      amount,
+      currency,
+      category,
+      subcategory,
+    })
+    const config = {
+      responseType: 'json',
+      headers: {
+        Authorization: `JWT ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    }
+    const response = await axios.post(`${this.server}expenses/`, data, config)
+    return response.data
   }
 }
 

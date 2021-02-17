@@ -13,7 +13,6 @@ import {
   NumberDecrementStepper,
   FormHelperText,
   Stack,
-  CircularProgress,
   Tooltip,
 } from '@chakra-ui/react'
 import { ErrorMessage } from '../components/ErrorMessage'
@@ -127,7 +126,7 @@ export const RegisterForm = props => {
   return (
     <form onSubmit={handleSubmit}>
       {error && <ErrorMessage message={error} />}
-      <Stack spacing="6">
+      <Stack spacing={5}>
         <FormControl id="username" isRequired>
           <FormLabel>Username</FormLabel>
           <Input
@@ -192,53 +191,57 @@ export const RegisterForm = props => {
           )}
         </FormControl>
         <DividerWithText mt="6">Account Settings</DividerWithText>
-        <FormControl id="currency" isRequired>
-          <FormLabel>Currency</FormLabel>
-          <Select
-            name="currency"
-            defaultValue={'EUR'}
-            onChange={event => handleOnChange(event, setCurrency)}
+        <Stack direction="row" spacing={4}>
+          <Tooltip
+            label="Specify your current liquidity (bank and cash)"
+            aria-label="amount tooltip"
           >
-            {currencies.map(currencie => (
-              <option key={currencie.id} value={currencie.ticker}>
-                {currencie.name}, {currencie.symbol}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-        <Tooltip
-          label="Specify your current liquidity (bank and cash)"
-          aria-label="amount tooltip"
-        >
-          <FormControl id="amount" isRequired>
-            <FormLabel>Amount</FormLabel>
+            <FormControl id="amount" width="260px" isRequired>
+              <FormLabel>Amount</FormLabel>
 
-            <NumberInput
-              onChange={valueString => {
-                setAmount(parse(valueString))
-              }}
-              value={format(amount)}
-              min={0}
-              max={99999999.99}
-              precision={2}
-              step={0.25}
-              pattern={null}
+              <NumberInput
+                onChange={valueString => {
+                  setAmount(parse(valueString))
+                }}
+                value={format(amount)}
+                min={0}
+                max={99999999.99}
+                precision={2}
+                step={0.25}
+                pattern={null}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
+          </Tooltip>
+          <FormControl id="currency" isRequired>
+            <FormLabel>Currency</FormLabel>
+            <Select
+              name="currency"
+              defaultValue={'EUR'}
+              onChange={event => handleOnChange(event, setCurrency)}
             >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+              {currencies.map(currencie => (
+                <option key={currencie.id} value={currencie.ticker}>
+                  {currencie.name}, {currencie.symbol}
+                </option>
+              ))}
+            </Select>
           </FormControl>
-        </Tooltip>
+        </Stack>
 
-        <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
-          {isLoading ? (
-            <CircularProgress isIndeterminate size="25px" color="blue" />
-          ) : (
-            'Register'
-          )}
+        <Button
+          type="submit"
+          colorScheme="blue"
+          size="lg"
+          fontSize="md"
+          isLoading={isLoading}
+        >
+          Register
         </Button>
       </Stack>
     </form>

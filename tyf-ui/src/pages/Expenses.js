@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Box,
@@ -15,15 +15,31 @@ import { GrPrevious, GrNext } from 'react-icons/gr'
 import { ExpensesTable } from '../components/ExpensesTable'
 import { SearchBar } from '../components/SearchBar'
 import { ExpensesForm } from '../components/ExpensesForm'
+import PersonalFinanceService from '../services/personalFinance.service'
 import './Expenses.css'
 
-function Expenses() {
+function Expenses(props) {
+  const personalFinanceService = new PersonalFinanceService()
+
   const bg = useColorModeValue('white', 'gray.700')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const [categories, setCategories] = useState([])
+
+  useEffect(async () => {
+    const serverCategories = await personalFinanceService.fetchExpenseCategories()
+    setCategories(serverCategories)
+  }, [])
+
   return (
     <Box bg={useColorModeValue('gray.50', 'inherit')} minH="100vh" width="100%">
-      <ExpensesForm isOpen={isOpen} onClose={onClose} />
+      <ExpensesForm
+        isOpen={isOpen}
+        onClose={onClose}
+        user={props.user}
+        account={props.account}
+        categories={categories}
+      />
       <Box
         maxW="4xl"
         mx="auto"
