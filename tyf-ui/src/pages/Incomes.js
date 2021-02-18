@@ -13,44 +13,32 @@ import {
 } from '@chakra-ui/react'
 import { FaPlus } from 'react-icons/fa'
 import { GrPrevious, GrNext } from 'react-icons/gr'
-import { ExpensesTable } from '../components/ExpensesTable'
-import { ExpensesForm } from '../components/ExpensesForm'
+import { IncomesTable } from '../components/IncomesTable'
+import { IncomesForm } from '../components/IncomesForm'
 import PersonalFinanceService from '../services/personalFinance.service'
-import './Expenses.css'
+import './Incomes.css'
 
-function Expenses(props) {
+function Incomes(props) {
   const personalFinanceService = new PersonalFinanceService()
 
   const bg = useColorModeValue('white', 'gray.700')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [categories, setCategories] = useState([])
-  const [subcategories, setSubcategories] = useState([])
 
   const [category, setCategory] = useState('')
-  const [subcategory, setSubcategory] = useState('')
 
   const [fetching, setFetching] = useState(false)
-  const [expenses, setExpenses] = useState([])
+  const [incomes, setIncomes] = useState([])
   const [page, setPage] = useState(1)
   const [isNext, setIsNext] = useState(false)
   const [isPrev, setIsPrev] = useState(false)
   const [trigger, setTrigger] = useState(false)
 
   useEffect(async () => {
-    const serverCategories = await personalFinanceService.fetchExpenseCategories()
+    const serverCategories = await personalFinanceService.fetchIncomeCategories()
     setCategories(serverCategories)
   }, [])
-
-  useEffect(() => {
-    const categoryObj = categories.find(
-      element => element.id === Number(category)
-    )
-    if (categoryObj) {
-      setSubcategories(categoryObj.subcategories)
-    } else setSubcategories([])
-    return () => setSubcategory('')
-  }, [category])
 
   const handleOnChange = (event, set) => {
     set(event.currentTarget.value)
@@ -58,30 +46,29 @@ function Expenses(props) {
 
   useEffect(async () => {
     setFetching(true)
-    const userExpenses = await personalFinanceService.fetchUserExpenses(
+    const userIncomes = await personalFinanceService.fetchUserIncomes(
       props.user.id,
       page,
-      category,
-      subcategory
+      category
     )
-    if (userExpenses) {
-      setIsNext(typeof userExpenses.next === 'string')
-      setIsPrev(typeof userExpenses.previous === 'string')
-      setExpenses(userExpenses.results)
+    if (userIncomes) {
+      setIsNext(typeof userIncomes.next === 'string')
+      setIsPrev(typeof userIncomes.previous === 'string')
+      setIncomes(userIncomes.results)
     }
     setFetching(false)
-  }, [page, category, subcategory, trigger])
+  }, [page, category, trigger])
 
-  const handleNewExpense = () => {
+  const handleNewIncome = () => {
     setTrigger(!trigger)
   }
 
   return (
     <Box bg={useColorModeValue('gray.50', 'inherit')} minH="100vh" width="100%">
-      <ExpensesForm
+      <IncomesForm
         isOpen={isOpen}
         onClose={onClose}
-        handleNewExpense={handleNewExpense}
+        handleNewIncome={handleNewIncome}
         user={props.user}
         account={props.account}
         categories={categories}
@@ -94,7 +81,7 @@ function Expenses(props) {
         textAlign="left"
       >
         <Heading as="h2" size="xl" fontWeight="bold">
-          Expenses
+          Incomes
         </Heading>
         <Stack
           mt="20px"
@@ -117,20 +104,6 @@ function Expenses(props) {
                   </option>
                 ))}
               </Select>
-              <Select
-                placeholder="All subcategories"
-                size="sm"
-                height="30px"
-                width="155px"
-                bg={bg}
-                onChange={event => handleOnChange(event, setSubcategory)}
-              >
-                {subcategories.map(subcategory => (
-                  <option key={subcategory.id} value={subcategory.id}>
-                    {subcategory.name}
-                  </option>
-                ))}
-              </Select>
             </Stack>
           </Stack>
           <Button
@@ -140,7 +113,7 @@ function Expenses(props) {
             width="130px"
             onClick={onOpen}
           >
-            New Expense
+            New Income
           </Button>
         </Stack>
         <Box
@@ -152,7 +125,7 @@ function Expenses(props) {
           borderColor={useColorModeValue('gray.200', 'gray.600')}
           borderRadius="md"
         >
-          <ExpensesTable expenses={expenses} fetching={fetching} />
+          <IncomesTable incomes={incomes} fetching={fetching} />
         </Box>
         <Stack
           direction="row"
@@ -184,9 +157,9 @@ function Expenses(props) {
   )
 }
 
-Expenses.propTypes = {
+Incomes.propTypes = {
   user: PropTypes.object,
   account: PropTypes.object,
 }
 
-export default Expenses
+export default Incomes

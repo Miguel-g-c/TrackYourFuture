@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import CurrencyService from '../services/currency.service'
 
-export const ExpensesTable = props => {
+export const IncomesTable = props => {
   const currencyService = new CurrencyService()
 
   const bc = useColorModeValue('gray.200', 'gray.600')
@@ -29,8 +29,8 @@ export const ExpensesTable = props => {
       {props.fetching ? (
         <Stack>
           <Skeleton height="25px" />
-          {props.expenses.map(expense => (
-            <Skeleton key={expense.id} height="25px" />
+          {props.incomes.map(income => (
+            <Skeleton key={income.id} height="25px" />
           ))}
         </Stack>
       ) : (
@@ -42,32 +42,30 @@ export const ExpensesTable = props => {
                 Amount
               </Th>
               <Th borderColor={bc}>Category</Th>
-              <Th borderColor={bc}>Subcategory</Th>
               <Th borderColor={bc}>Date</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {props.expenses.map(expense => (
-              <Tr key={expense.id}>
+            {props.incomes.map(income => (
+              <Tr key={income.id}>
                 <Tooltip
                   hasArrow
                   placement="right"
                   size="sm"
                   colorScheme="blue"
-                  label={expense.description}
-                  aria-label="expense description tooltip"
+                  label={income.description}
+                  aria-label="income description tooltip"
                 >
-                  <Td borderColor={bc}>{expense.name}</Td>
+                  <Td borderColor={bc}>{income.name}</Td>
                 </Tooltip>
                 <Td borderColor={bc} isNumeric>
                   {currencyService.format(
-                    expense.amount,
-                    expense.currency.ticker
+                    income.amount,
+                    income.currency.ticker
                   )}
                 </Td>
-                <Td borderColor={bc}>{expense.category.name}</Td>
-                <Td borderColor={bc}>{expense.subcategory.name}</Td>
-                <Td borderColor={bc}>{toDate(expense.timestamp)}</Td>
+                <Td borderColor={bc}>{income.category.name}</Td>
+                <Td borderColor={bc}>{toDate(income.timestamp)}</Td>
               </Tr>
             ))}
           </Tbody>
@@ -77,7 +75,7 @@ export const ExpensesTable = props => {
   )
 }
 
-ExpensesTable.propTypes = {
-  expenses: PropTypes.array.isRequired,
+IncomesTable.propTypes = {
+  incomes: PropTypes.array.isRequired,
   fetching: PropTypes.bool.isRequired,
 }

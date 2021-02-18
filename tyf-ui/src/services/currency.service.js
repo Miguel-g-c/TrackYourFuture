@@ -5,7 +5,7 @@ class CurrencyService {
     this.server = 'http://127.0.0.1:8000/'
     this.locales = {
       USD: 'en-US',
-      EUR: 'de_DE,',
+      EUR: 'de-DE',
     }
   }
 

@@ -25,19 +25,17 @@ import {
 } from '@chakra-ui/react'
 import PersonalFinanceService from '../services/personalFinance.service'
 
-export const ExpensesForm = props => {
+export const IncomesForm = props => {
   const personalFinanceService = new PersonalFinanceService()
 
   const initialRef = React.useRef()
   const toast = useToast()
 
   const [currencies, setCurrencies] = useState([])
-  const [subcategories, setSubcategories] = useState([])
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState(null)
-  const [subcategory, setSubcategory] = useState(null)
   const [amount, setAmount] = useState('0.00')
   const [currency, setCurrency] = useState(props.account.currency.id)
 
@@ -48,16 +46,6 @@ export const ExpensesForm = props => {
     setCurrencies(serverCurrencies)
   }, [])
 
-  useEffect(() => {
-    const categoryObj = props.categories.find(
-      element => element.id === Number(category)
-    )
-    if (categoryObj) {
-      setSubcategories(categoryObj.subcategories)
-    } else setSubcategories([])
-    return () => setSubcategory(null)
-  }, [category])
-
   const handleOnChange = (event, set) => {
     set(event.currentTarget.value)
   }
@@ -66,17 +54,16 @@ export const ExpensesForm = props => {
     event.preventDefault()
     setIsLoading(true)
     try {
-      await personalFinanceService.addExpense(
+      await personalFinanceService.addIncome(
         props.user.id,
         name,
         description,
         amount,
         Number(currency),
-        Number(category),
-        Number(subcategory)
+        Number(category)
       )
       toast({
-        title: 'Expense added succesfully.',
+        title: 'Income added succesfully.',
         status: 'success',
         duration: 5000,
         isClosable: true,
@@ -84,17 +71,16 @@ export const ExpensesForm = props => {
       setName('')
       setDescription('')
       setCategory(null)
-      setSubcategory(null)
       setAmount('0.00')
       setCurrency(props.account.currency.id)
       setIsLoading(false)
       props.onClose()
-      props.handleNewExpense()
+      props.handleNewIncome()
     } catch (error) {
       console.error(error)
       setIsLoading(false)
       toast({
-        title: 'Unable to add expense. Try again.',
+        title: 'Unable to add income. Try again.',
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -130,7 +116,6 @@ export const ExpensesForm = props => {
         setName('')
         setDescription('')
         setCategory(null)
-        setSubcategory(null)
         setAmount('0.00')
         setCurrency(props.account.currency.id)
         props.onClose()
@@ -139,13 +124,13 @@ export const ExpensesForm = props => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>New Expense</ModalHeader>
+        <ModalHeader>New Income</ModalHeader>
         <ModalCloseButton />
         <form onSubmit={handleSubmit}>
           <ModalBody pb={6}>
             <Stack spacing={4}>
               <FormControl id="name" isRequired>
-                <FormLabel>Expense</FormLabel>
+                <FormLabel>Income</FormLabel>
                 <Input
                   ref={initialRef}
                   placeholder="Name"
@@ -173,19 +158,6 @@ export const ExpensesForm = props => {
                     {props.categories.map(category => (
                       <option key={category.id} value={category.id}>
                         {category.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl id="subcategory" isRequired>
-                  <FormLabel>Subcategory</FormLabel>
-                  <Select
-                    placeholder="Subcategory"
-                    onChange={event => handleOnChange(event, setSubcategory)}
-                  >
-                    {subcategories.map(subcategory => (
-                      <option key={subcategory.id} value={subcategory.id}>
-                        {subcategory.name}
                       </option>
                     ))}
                   </Select>
@@ -241,11 +213,11 @@ export const ExpensesForm = props => {
   )
 }
 
-ExpensesForm.propTypes = {
+IncomesForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   user: PropTypes.object,
   account: PropTypes.object,
   categories: PropTypes.array,
-  handleNewExpense: PropTypes.func.isRequired,
+  handleNewIncome: PropTypes.func.isRequired,
 }

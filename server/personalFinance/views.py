@@ -88,7 +88,7 @@ class AssetCategoryView(viewsets.ModelViewSet):
 class IncomeView(viewsets.ModelViewSet):
     queryset = Income.objects.all().order_by('-timestamp')
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ('user', 'category', 'subcategory',)
+    filterset_fields = ('user', 'category',)
     pagination_class = StandardPagination
 
     def get_serializer_class(self):
@@ -103,7 +103,6 @@ class ExpenseView(viewsets.ModelViewSet):
     queryset = Expense.objects.all().order_by('-timestamp')
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('user', 'category', 'subcategory',)
-    search_fields =('name',)
     pagination_class = StandardPagination
 
     def get_serializer_class(self):

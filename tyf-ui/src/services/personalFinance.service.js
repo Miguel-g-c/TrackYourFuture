@@ -35,6 +35,21 @@ class PersonalFinanceService {
     }
   }
 
+  async fetchIncomeCategories() {
+    try {
+      const response = await axios.get(`${this.server}categories/income/`, {
+        responseType: 'json',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   async createAccount(user, currency, amount) {
     const data = JSON.stringify({
       user,
@@ -87,7 +102,6 @@ class PersonalFinanceService {
       category,
       subcategory,
     })
-    console.log(data)
     const config = {
       responseType: 'json',
       headers: {
@@ -99,10 +113,49 @@ class PersonalFinanceService {
     return response.data
   }
 
+  async addIncome(user, name, description, amount, currency, category) {
+    const data = JSON.stringify({
+      user,
+      name,
+      description,
+      amount,
+      currency,
+      category,
+    })
+    const config = {
+      responseType: 'json',
+      headers: {
+        Authorization: `JWT ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    }
+    const response = await axios.post(`${this.server}incomes/`, data, config)
+    return response.data
+  }
+
   async fetchUserExpenses(user, page, category = '', subcategory = '') {
     try {
       const response = await axios.get(
         `${this.server}expenses/?user=${user}&page=${page}&category=${category}&subcategory=${subcategory}`,
+        {
+          responseType: 'json',
+          headers: {
+            Authorization: `JWT ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async fetchUserIncomes(user, page, category = '') {
+    try {
+      const response = await axios.get(
+        `${this.server}incomes/?user=${user}&page=${page}&category=${category}`,
         {
           responseType: 'json',
           headers: {
