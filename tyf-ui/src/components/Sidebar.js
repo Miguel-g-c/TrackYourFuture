@@ -67,6 +67,7 @@ export const Sidebar = props => {
                 isFullWidth
                 isActive={active.dashboard}
                 my={2}
+                onClick={() => setTimeout(props.onClose, 200)}
               >
                 Dashboard
               </Button>
@@ -81,6 +82,7 @@ export const Sidebar = props => {
                 isFullWidth
                 isActive={active.incomes}
                 my={2}
+                onClick={() => setTimeout(props.onClose, 200)}
               >
                 Incomes
               </Button>
@@ -95,6 +97,7 @@ export const Sidebar = props => {
                 isFullWidth
                 isActive={active.expenses}
                 my={2}
+                onClick={() => setTimeout(props.onClose, 200)}
               >
                 Expenses
               </Button>
@@ -109,6 +112,7 @@ export const Sidebar = props => {
                 isFullWidth
                 isActive={active.assets}
                 my={2}
+                onClick={() => setTimeout(props.onClose, 200)}
               >
                 Assets
               </Button>
