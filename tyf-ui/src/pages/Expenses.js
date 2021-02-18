@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {
   Box,
   Stack,
+  Text,
   Button,
   IconButton,
   Heading,
@@ -13,7 +14,6 @@ import {
 import { FaPlus } from 'react-icons/fa'
 import { GrPrevious, GrNext } from 'react-icons/gr'
 import { ExpensesTable } from '../components/ExpensesTable'
-import { SearchBar } from '../components/SearchBar'
 import { ExpensesForm } from '../components/ExpensesForm'
 import PersonalFinanceService from '../services/personalFinance.service'
 import './Expenses.css'
@@ -27,8 +27,15 @@ function Expenses(props) {
   const [categories, setCategories] = useState([])
   const [subcategories, setSubcategories] = useState([])
 
-  const [category, setCategory] = useState(null)
-  const [subcategory, setSubcategory] = useState(null)
+  const [category, setCategory] = useState('')
+  const [subcategory, setSubcategory] = useState('')
+
+  const [fetching, setFetching] = useState(false)
+  const [expenses, setExpenses] = useState([])
+  const [page, setPage] = useState(1)
+  const [isNext, setIsNext] = useState(false)
+  const [isPrev, setIsPrev] = useState(false)
+  const [trigger, setTrigger] = useState(false)
 
   useEffect(async () => {
     const serverCategories = await personalFinanceService.fetchExpenseCategories()
@@ -42,7 +49,7 @@ function Expenses(props) {
     if (categoryObj) {
       setSubcategories(categoryObj.subcategories)
     } else setSubcategories([])
-    return () => setSubcategory(null)
+    return () => setSubcategory('')
   }, [category])
 
   const handleOnChange = (event, set) => {
@@ -50,11 +57,32 @@ function Expenses(props) {
     set(event.currentTarget.value)
   }
 
+  useEffect(async () => {
+    setFetching(true)
+    const userExpenses = await personalFinanceService.fetchUserExpenses(
+      props.user.id,
+      page,
+      category,
+      subcategory
+    )
+    if (userExpenses) {
+      setIsNext(typeof userExpenses.next === 'string')
+      setIsPrev(typeof userExpenses.previous === 'string')
+      setExpenses(userExpenses.results)
+    }
+    setFetching(false)
+  }, [page, category, subcategory, trigger])
+
+  const handleNewExpense = () => {
+    setTrigger(!trigger)
+  }
+
   return (
     <Box bg={useColorModeValue('gray.50', 'inherit')} minH="100vh" width="100%">
       <ExpensesForm
         isOpen={isOpen}
         onClose={onClose}
+        handleNewExpense={handleNewExpense}
         user={props.user}
         account={props.account}
         categories={categories}
@@ -75,9 +103,6 @@ function Expenses(props) {
           justifyContent="space-between"
         >
           <Stack direction={['column', 'column', 'row']}>
-            <Box>
-              <SearchBar bg={bg} />
-            </Box>
             <Stack direction="row">
               <Select
                 placeholder="All categories"
@@ -128,7 +153,11 @@ function Expenses(props) {
           borderColor={useColorModeValue('gray.200', 'gray.600')}
           borderRadius="md"
         >
-          <ExpensesTable />
+          <ExpensesTable
+            expenses={expenses}
+            fetching={fetching}
+            account={props.account}
+          />
         </Box>
         <Stack
           direction="row"
@@ -142,12 +171,17 @@ function Expenses(props) {
             aria-label="Previous"
             size="sm"
             icon={<GrPrevious />}
+            isDisabled={!isPrev}
+            onClick={() => setPage(page - 1)}
           />
+          <Text fontSize="lg">Page {page}</Text>
           <IconButton
             colorScheme="blue"
             aria-label="Next"
             size="sm"
             icon={<GrNext />}
+            isDisabled={!isNext}
+            onClick={() => setPage(page + 1)}
           />
         </Stack>
       </Box>

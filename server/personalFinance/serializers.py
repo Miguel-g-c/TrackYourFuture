@@ -51,6 +51,14 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'currency', 'amount')
 
 
+class AccountReadSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Account
+        fields = ('id', 'user', 'currency', 'amount')
+        depth = 1
+
+
 class IncomeCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = IncomeCategory
@@ -83,11 +91,29 @@ class IncomeSerializer(serializers.ModelSerializer):
                   'amount', 'currency', 'category', 'timestamp')
 
 
+class IncomeReadSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Income
+        fields = ('id', 'user', 'name', 'description',
+                  'amount', 'currency', 'category', 'timestamp')
+        depth = 1
+
+
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = ('id', 'user', 'name', 'description', 'amount',
                   'currency', 'category', 'subcategory', 'timestamp')
+
+
+class ExpenseReadSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Expense
+        fields = ('id', 'user', 'name', 'description', 'amount',
+                  'currency', 'category', 'subcategory', 'timestamp')
+        depth = 1
 
 
 class AssetBuySerializer(serializers.ModelSerializer):

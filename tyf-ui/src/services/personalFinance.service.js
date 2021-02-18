@@ -87,6 +87,7 @@ class PersonalFinanceService {
       category,
       subcategory,
     })
+    console.log(data)
     const config = {
       responseType: 'json',
       headers: {
@@ -96,6 +97,25 @@ class PersonalFinanceService {
     }
     const response = await axios.post(`${this.server}expenses/`, data, config)
     return response.data
+  }
+
+  async fetchUserExpenses(user, page, category = '', subcategory = '') {
+    try {
+      const response = await axios.get(
+        `${this.server}expenses/?user=${user}&page=${page}&category=${category}&subcategory=${subcategory}`,
+        {
+          responseType: 'json',
+          headers: {
+            Authorization: `JWT ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 

@@ -1,59 +1,84 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
+  Stack,
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
+  Tooltip,
+  Skeleton,
   useColorModeValue,
 } from '@chakra-ui/react'
+import CurrencyService from '../services/currency.service'
 
-export const ExpensesTable = () => {
+export const ExpensesTable = props => {
+  const currencyService = new CurrencyService()
+
   const bc = useColorModeValue('gray.200', 'gray.600')
 
+  function toDate(ISOString) {
+    const date = new Date(ISOString)
+    return date.toDateString()
+  }
+
   return (
-    <Table size="sm">
-      <Thead>
-        <Tr>
-          <Th borderColor={bc}>To convert</Th>
-          <Th borderColor={bc}>into</Th>
-          <Th borderColor={bc} isNumeric>
-            multiply by
-          </Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        <Tr>
-          <Td borderColor={bc}>inches</Td>
-          <Td borderColor={bc}>millimetres (mm)</Td>
-          <Td borderColor={bc} isNumeric>
-            25.4
-          </Td>
-        </Tr>
-        <Tr>
-          <Td borderColor={bc}>feet</Td>
-          <Td borderColor={bc}>centimetres (cm)</Td>
-          <Td isNumeric borderColor={bc}>
-            30.48
-          </Td>
-        </Tr>
-        <Tr>
-          <Td borderColor={bc}>yards</Td>
-          <Td borderColor={bc}>metres (m)</Td>
-          <Td borderColor={bc} isNumeric>
-            0.91444
-          </Td>
-        </Tr>
-      </Tbody>
-      <Tfoot>
-        <Tr>
-          <Th>To convert</Th>
-          <Th>into</Th>
-          <Th isNumeric>multiply by</Th>
-        </Tr>
-      </Tfoot>
-    </Table>
+    <>
+      {props.fetching ? (
+        <Stack>
+          <Skeleton height="25px" />
+          {props.expenses.map(expense => (
+            <Skeleton key={expense.id} height="25px" />
+          ))}
+        </Stack>
+      ) : (
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th borderColor={bc}>Name</Th>
+              <Th borderColor={bc} isNumeric>
+                Amount
+              </Th>
+              <Th borderColor={bc}>Category</Th>
+              <Th borderColor={bc}>Subcategory</Th>
+              <Th borderColor={bc}>Date</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {props.expenses.map(expense => (
+              <Tr key={expense.id}>
+                <Tooltip
+                  hasArrow
+                  placement="right"
+                  size="sm"
+                  colorScheme="blue"
+                  label={expense.description}
+                  aria-label="expense description tooltip"
+                >
+                  <Td borderColor={bc}>{expense.name}</Td>
+                </Tooltip>
+                <Td borderColor={bc} isNumeric>
+                  {currencyService.format(
+                    expense.amount,
+                    props.account.currency.ticker
+                  )}
+                </Td>
+                <Td borderColor={bc}>{expense.category.name}</Td>
+                <Td borderColor={bc}>{expense.subcategory.name}</Td>
+                <Td borderColor={bc}>{toDate(expense.timestamp)}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      )}
+    </>
   )
+}
+
+ExpensesTable.propTypes = {
+  account: PropTypes.object.isRequired,
+  expenses: PropTypes.array.isRequired,
+  fetching: PropTypes.bool.isRequired,
 }

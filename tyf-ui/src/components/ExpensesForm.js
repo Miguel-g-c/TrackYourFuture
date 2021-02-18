@@ -39,7 +39,7 @@ export const ExpensesForm = props => {
   const [category, setCategory] = useState(null)
   const [subcategory, setSubcategory] = useState(null)
   const [amount, setAmount] = useState('0.00')
-  const [currency, setCurrency] = useState(props.account.currency)
+  const [currency, setCurrency] = useState(props.account.currency.id)
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -86,9 +86,10 @@ export const ExpensesForm = props => {
       setCategory(null)
       setSubcategory(null)
       setAmount('0.00')
-      setCurrency(props.account.currency)
+      setCurrency(props.account.currency.id)
       setIsLoading(false)
       props.onClose()
+      props.handleNewExpense()
     } catch (error) {
       console.error(error)
       setIsLoading(false)
@@ -111,7 +112,7 @@ export const ExpensesForm = props => {
         setCategory(null)
         setSubcategory(null)
         setAmount('0.00')
-        setCurrency(props.account.currency)
+        setCurrency(props.account.currency.id)
         props.onClose()
       }}
       isCentered
@@ -195,7 +196,7 @@ export const ExpensesForm = props => {
                   <FormLabel>Currency</FormLabel>
                   <Select
                     name="currency"
-                    defaultValue={props.account.currency}
+                    defaultValue={props.account.currency.id}
                     onChange={event => handleOnChange(event, setCurrency)}
                   >
                     {currencies.map(currencie => (
@@ -226,4 +227,5 @@ ExpensesForm.propTypes = {
   user: PropTypes.object,
   account: PropTypes.object,
   categories: PropTypes.array,
+  handleNewExpense: PropTypes.func.isRequired,
 }

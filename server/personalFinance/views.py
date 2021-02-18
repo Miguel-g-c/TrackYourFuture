@@ -12,13 +12,14 @@ from .models import User, Currency, Account, IncomeCategory, \
 from .serializers import UserSerializer, UserSerializerWithToken, CurrencySerializer, \
     AccountSerializer, IncomeCategorySerializer, IncomeSerializer, \
     ExpenseCategorySerializer, ExpenseSerializer, AssetCategorySerializer, \
-    AssetBuySerializer, AssetSellSerializer, ExpenseSubCategorySerializer
+    AssetBuySerializer, AssetSellSerializer, ExpenseSubCategorySerializer, \
+    IncomeReadSerializer, ExpenseReadSerializer, AccountReadSerializer
 
 
 # Create your views here.
 
 class StandardPagination(PageNumberPagination):
-    page_size=10
+    page_size = 10
 
 
 class UserView(viewsets.ModelViewSet):
@@ -41,11 +42,17 @@ def current_user(request):
 
 
 class AccountView(viewsets.ModelViewSet):
-    serializer_class = AccountSerializer
     queryset = Account.objects.all()
     permission_classes = (permissions.AllowAny,)
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ('user',)
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'GET':
+            return AccountReadSerializer
+        else:
+            return AccountSerializer
 
 
 class CurrencyView(viewsets.ModelViewSet):
@@ -79,19 +86,32 @@ class AssetCategoryView(viewsets.ModelViewSet):
 
 
 class IncomeView(viewsets.ModelViewSet):
-    serializer_class = IncomeSerializer
     queryset = Income.objects.all().order_by('-timestamp')
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ('user',)
+    filterset_fields = ('user', 'category', 'subcategory',)
     pagination_class = StandardPagination
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'GET':
+            return IncomeReadSerializer
+        else:
+            return IncomeSerializer
 
 
 class ExpenseView(viewsets.ModelViewSet):
-    serializer_class = ExpenseSerializer
     queryset = Expense.objects.all().order_by('-timestamp')
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ('user',)
+    filterset_fields = ('user', 'category', 'subcategory',)
+    search_fields =('name',)
     pagination_class = StandardPagination
+
+    def get_serializer_class(self):
+        method = self.request.method
+        if method == 'GET':
+            return ExpenseReadSerializer
+        else:
+            return ExpenseSerializer
 
 
 class AssetBuyView(viewsets.ModelViewSet):
