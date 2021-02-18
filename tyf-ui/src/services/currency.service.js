@@ -1,7 +1,8 @@
-// import axios from 'axios'
+import axios from 'axios'
 
 class CurrencyService {
   constructor() {
+    this.server = 'https://api.exchangeratesapi.io/'
     this.locales = {
       USD: 'en-US',
       EUR: 'de-DE',
@@ -14,6 +15,21 @@ class CurrencyService {
       currency: currency,
     })
     return formatter.format(amount)
+  }
+
+  async getExchangeRate(base, symbol) {
+    try {
+      const response = await axios.get(`${this.server}latest?base=${base}/`, {
+        responseType: 'json',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const rate = response.data.rates[symbol]
+      return Number(rate)
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 

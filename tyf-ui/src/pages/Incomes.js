@@ -85,7 +85,7 @@ function Incomes(props) {
         </Heading>
         <Stack
           mt="20px"
-          direction={['column', 'column', 'row']}
+          direction={['column', 'row', 'row']}
           justifyContent="space-between"
         >
           <Stack direction={['column', 'column', 'row']}>
