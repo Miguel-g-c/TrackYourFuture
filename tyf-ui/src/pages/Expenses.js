@@ -56,6 +56,11 @@ function Expenses(props) {
     set(event.currentTarget.value)
   }
 
+  const handleOnDelete = async expenseID => {
+    await personalFinanceService.deleteExpense(expenseID)
+    setTrigger(!trigger)
+  }
+
   useEffect(async () => {
     setFetching(true)
     const userExpenses = await personalFinanceService.fetchUserExpenses(
@@ -145,14 +150,18 @@ function Expenses(props) {
         </Stack>
         <Box
           className="table-container"
-          p="10px"
+          pt="8px"
           mt="10px"
           border="1px"
           bg={bg}
           borderColor={useColorModeValue('gray.200', 'gray.600')}
           borderRadius="md"
         >
-          <ExpensesTable expenses={expenses} fetching={fetching} />
+          <ExpensesTable
+            expenses={expenses}
+            fetching={fetching}
+            handleOnDelete={handleOnDelete}
+          />
         </Box>
         <Stack
           direction="row"

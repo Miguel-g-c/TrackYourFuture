@@ -113,6 +113,25 @@ class PersonalFinanceService {
     return response.data
   }
 
+  async deleteExpense(expenseID) {
+    try {
+      const response = await axios.delete(
+        `${this.server}expenses/${expenseID}`,
+        {
+          responseType: 'json',
+          headers: {
+            Authorization: `JWT ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   async addIncome(user, name, description, amount, currency, category) {
     const data = JSON.stringify({
       user,
@@ -131,6 +150,22 @@ class PersonalFinanceService {
     }
     const response = await axios.post(`${this.server}incomes/`, data, config)
     return response.data
+  }
+
+  async deleteIncome(incomeID) {
+    try {
+      const response = await axios.delete(`${this.server}incomes/${incomeID}`, {
+        responseType: 'json',
+        headers: {
+          Authorization: `JWT ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   async fetchUserExpenses(user, page, category = '', subcategory = '') {
