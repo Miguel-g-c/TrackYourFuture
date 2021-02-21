@@ -14,6 +14,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Expenses from './pages/Expenses'
 import Incomes from './pages/Incomes'
+import Dashboard from './pages/Dashboard'
 import AuthenticationService from './services/authentication.service'
 import PersonalFinanceService from './services/personalFinance.service'
 import './App.css'
@@ -78,6 +79,13 @@ function App() {
             <Route path="/incomes">
               {user ? (
                 <Incomes user={user} account={account} />
+              ) : (
+                <Redirect to="/" />
+              )}
+            </Route>
+            <Route path="/dashboard">
+              {user ? (
+                <Dashboard user={user} account={account} />
               ) : (
                 <Redirect to="/" />
               )}

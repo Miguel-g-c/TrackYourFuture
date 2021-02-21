@@ -21,7 +21,7 @@ export const StatBadge = props => {
         {props.percent !== 0 && (
           <StatArrow type={props.percent > 0 ? 'increase' : 'decrease'} />
         )}
-        {props.percent}%
+        {props.percent.toFixed(2)}%
       </StatHelpText>
     </Stat>
   )

@@ -1,8 +1,10 @@
 import axios from 'axios'
+import CurrencyService from './currency.service'
 
 class PersonalFinanceService {
   constructor() {
     this.server = 'http://127.0.0.1:8000/api/'
+    this.currencyService = new CurrencyService()
   }
 
   async fetchCurrencies() {
@@ -204,6 +206,72 @@ class PersonalFinanceService {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  async computeUserTotalExpenses(userID, accountCurrency) {
+    var expenses = 0
+    var evaluated = 0
+    var page = 0
+    const expensesResponse = await this.fetchUserExpenses(userID, 1)
+    while (evaluated < expensesResponse.count) {
+      page++
+      const expensesData = await this.fetchUserExpenses(userID, page)
+      for (const i in expensesData.results) {
+        if (expensesData.results[i].currency.ticker === accountCurrency) {
+          expenses += Number(expensesData.results[i].amount)
+          evaluated++
+        } else {
+          const expense = Number(expensesData.results[i].amount)
+          const ticker = expensesData.results[i].currency.ticker
+          const rate = await this.currencyService.getExchangeRate(
+            accountCurrency,
+            ticker
+          )
+          expenses += expense * rate
+          evaluated++
+        }
+      }
+    }
+    return expenses
+  }
+
+  async computeUserTotalIncomes(userID, accountCurrency) {
+    var incomes = 0
+    var evaluated = 0
+    var page = 0
+    const incomesResponse = await this.fetchUserIncomes(userID, 1)
+    while (evaluated < incomesResponse.count) {
+      page++
+      const incomesData = await this.fetchUserIncomes(userID, page)
+      for (const i in incomesData.results) {
+        if (incomesData.results[i].currency.ticker === accountCurrency) {
+          incomes += Number(incomesData.results[i].amount)
+          evaluated++
+        } else {
+          const income = Number(incomesData.results[i].amount)
+          const ticker = incomesData.results[i].currency.ticker
+          const rate = await this.currencyService.getExchangeRate(
+            accountCurrency,
+            ticker
+          )
+          incomes += income * rate
+          evaluated++
+        }
+      }
+    }
+    return incomes
+  }
+
+  async computeUserCapital(userID, accountCurrency) {
+    const account = await this.fetchAccountByUser(userID)
+    const initialCapital = Number(account.amount)
+    const expenses = await this.computeUserTotalExpenses(
+      userID,
+      accountCurrency
+    )
+    const incomes = await this.computeUserTotalIncomes(userID, accountCurrency)
+
+    return initialCapital - expenses + incomes
   }
 }
 

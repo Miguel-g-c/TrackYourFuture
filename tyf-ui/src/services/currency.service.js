@@ -17,15 +17,15 @@ class CurrencyService {
     return formatter.format(amount)
   }
 
-  async getExchangeRate(base, symbol) {
+  async getExchangeRate(base, ticker) {
     try {
-      const response = await axios.get(`${this.server}latest?base=${base}/`, {
+      const response = await axios.get(`${this.server}latest?base=${base}`, {
         responseType: 'json',
         headers: {
           'Content-Type': 'application/json',
         },
       })
-      const rate = response.data.rates[symbol]
+      const rate = response.data.rates[ticker]
       return Number(rate)
     } catch (error) {
       console.error(error)
