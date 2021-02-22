@@ -85,10 +85,21 @@ class AssetCategoryView(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
 
+class IncomeFilter(filters.FilterSet):
+    min_date = filters.IsoDateTimeFilter(
+        field_name="timestamp", lookup_expr='gte')
+    max_date = filters.IsoDateTimeFilter(
+        field_name="timestamp", lookup_expr='lte')
+
+    class Meta:
+        model = Income
+        fields = ['user', 'category', 'min_date', 'max_date']
+
+
 class IncomeView(viewsets.ModelViewSet):
     queryset = Income.objects.all().order_by('-timestamp')
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ('user', 'category',)
+    filterset_class = IncomeFilter
     pagination_class = StandardPagination
 
     def get_serializer_class(self):
@@ -99,10 +110,21 @@ class IncomeView(viewsets.ModelViewSet):
             return IncomeSerializer
 
 
+class ExpenseFilter(filters.FilterSet):
+    min_date = filters.IsoDateTimeFilter(
+        field_name="timestamp", lookup_expr='gte')
+    max_date = filters.IsoDateTimeFilter(
+        field_name="timestamp", lookup_expr='lte')
+
+    class Meta:
+        model = Expense
+        fields = ['user', 'category', 'subcategory', 'min_date', 'max_date']
+
+
 class ExpenseView(viewsets.ModelViewSet):
     queryset = Expense.objects.all().order_by('-timestamp')
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ('user', 'category', 'subcategory',)
+    filterset_class = ExpenseFilter
     pagination_class = StandardPagination
 
     def get_serializer_class(self):

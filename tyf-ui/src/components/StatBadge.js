@@ -6,6 +6,7 @@ import {
   StatNumber,
   StatHelpText,
   StatArrow,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import CurrencyService from '../services/currency.service'
 
@@ -14,7 +15,14 @@ export const StatBadge = props => {
   const moneyString = currencyService.format(props.money, props.ticker)
 
   return (
-    <Stat>
+    <Stat
+      bg={useColorModeValue('white', 'gray.700')}
+      py="8"
+      px={{ base: '4', md: '10' }}
+      shadow="base"
+      rounded="md"
+      maxWidth="300px"
+    >
       <StatLabel>{props.label}</StatLabel>
       <StatNumber>{moneyString}</StatNumber>
       <StatHelpText>
