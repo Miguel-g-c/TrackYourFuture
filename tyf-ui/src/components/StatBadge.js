@@ -18,10 +18,11 @@ export const StatBadge = props => {
     <Stat
       bg={useColorModeValue('white', 'gray.700')}
       py="8"
-      px={{ base: '4', md: '10' }}
+      px="10"
       shadow="base"
       rounded="md"
       maxWidth="300px"
+      minWidth={['100%', 'inherit', 'inherit']}
     >
       <StatLabel>{props.label}</StatLabel>
       <StatNumber>{moneyString}</StatNumber>
