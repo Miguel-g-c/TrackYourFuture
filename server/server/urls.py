@@ -35,17 +35,8 @@ router.register(r'categories/expense',
 router.register(r'categories/expensesub',
                 views.ExpenseSubCategoryView, 'expense_subcategories')
 
-router.register(r'categories/asset',
-                views.AssetCategoryView, 'asset_categories')
-
 router.register(r'incomes', views.IncomeView, 'income')
 router.register(r'expenses', views.ExpenseView, 'expense')
-
-router.register(r'assets/bought',
-                views.AssetBuyView, 'asset_bought')
-
-router.register(r'assets/sold',
-                views.AssetSellView, 'asset_sold')
 
 
 urlpatterns = [

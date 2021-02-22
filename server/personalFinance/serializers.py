@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from .models import User, Currency, Account, IncomeCategory, \
-    Income, ExpenseCategory, Expense, AssetCategory, \
-    AssetBuy, AssetSell, ExpenseSubCategory
+    Income, ExpenseCategory, Expense, ExpenseSubCategory
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -53,6 +52,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class AccountReadSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+
     class Meta:
         model = Account
         fields = ('id', 'user', 'currency', 'amount')
@@ -78,12 +78,6 @@ class ExpenseSubCategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'category', 'name')
 
 
-class AssetCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AssetCategory
-        fields = ('id', 'name')
-
-
 class IncomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Income
@@ -93,6 +87,7 @@ class IncomeSerializer(serializers.ModelSerializer):
 
 class IncomeReadSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+
     class Meta:
         model = Income
         fields = ('id', 'user', 'name', 'description',
@@ -109,21 +104,9 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 class ExpenseReadSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+
     class Meta:
         model = Expense
         fields = ('id', 'user', 'name', 'description', 'amount',
                   'currency', 'category', 'subcategory', 'timestamp')
         depth = 1
-
-
-class AssetBuySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AssetBuy
-        fields = ('id', 'user', 'category', 'ticker',
-                  'amount', 'price', 'currency', 'timestamp')
-
-
-class AssetSellSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AssetSell
-        fields = ('id', 'buy', 'price', 'timestamp')

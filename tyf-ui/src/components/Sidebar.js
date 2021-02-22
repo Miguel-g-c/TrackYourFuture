@@ -15,7 +15,6 @@ import {
 import { Link, useLocation } from 'react-router-dom'
 import { MdDashboard } from 'react-icons/md'
 import { GiReceiveMoney, GiPayMoney } from 'react-icons/gi'
-import { AiOutlineStock } from 'react-icons/ai'
 import lightLogo from './static/tyf_light.png'
 import darkLogo from './static/tyf_dark.png'
 
@@ -100,21 +99,6 @@ export const Sidebar = props => {
                 onClick={() => setTimeout(props.onClose, 200)}
               >
                 Expenses
-              </Button>
-            </Link>
-            <Link to="/assets">
-              <Button
-                leftIcon={<AiOutlineStock />}
-                colorScheme="teal"
-                variant="ghost"
-                height="35px"
-                justifyContent="flex-start"
-                isFullWidth
-                isActive={active.assets}
-                my={2}
-                onClick={() => setTimeout(props.onClose, 200)}
-              >
-                Assets
               </Button>
             </Link>
           </DrawerBody>
