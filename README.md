@@ -2,7 +2,7 @@
 
 TrackYourFuture is a web application for personal finance management.
 
-* **Track your expenses:** Add your epenses in a user-friendly form and TrackYourFuture will store them clasified by category, subcategory and date.
+* **Track your expenses:** Add your expenses in a user-friendly form and TrackYourFuture will store them clasified by category, subcategory and date.
 * **Track your incomes:** Add your income streams in a user-friendly form and TrackYourFuture will store them clasified by category and date.
 * **Visualize your data:** TrackYourFuture's dashboard brings you the power of tracking your month expenses and incomes at a glance.
 
@@ -36,10 +36,10 @@ $ npm start
 
 You can now start to use the features of TrackYourFuture!
 
-## Backend
+### Backend
 
 TrackYourFuture's backend uses [Django](https://www.djangoproject.com/) and [django-rest-framework](https://www.django-rest-framework.org/) to build an end-point REST API. This end-point manages the models for tracking users, accounts, currencies, categories, incomes and expenses. It also allows url filtering thanks to [django-filter](https://django-filter.readthedocs.io/en/stable/) capabilities. Finally, authentication is handled with JSON Web Tokens thanks to [djangorestframework-jwt](https://pypi.org/project/djangorestframework-jwt/)
 
-## Frontend
+### Frontend
 
 TrackYourFuture's frontend was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and [Chakra UI](https://chakra-ui.com/). It consumes the Backend API to build a responsive and dynamic UI for the app. 
