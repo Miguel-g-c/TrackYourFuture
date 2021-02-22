@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Box, Stack, Center, useColorModeValue } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Stack,
+  Center,
+  Heading,
+  useColorModeValue,
+} from '@chakra-ui/react'
 import { StatBadge } from '../components/StatBadge'
+import { DoublePieChart } from '../components/DoublePieChart'
 import PersonalFinanceService from '../services/personalFinance.service'
 
 function Dashboard(props) {
@@ -18,7 +26,7 @@ function Dashboard(props) {
   const [lastMonthExpenses, setLastMonthExpenses] = useState([])
   const [lastMonthTotalExpenses, setLastMonthTotalExpenses] = useState(0)
   const [expensesVariation, setExpensesVariation] = useState(0)
-  const [lastMonthIncomes, setLastMonthIncomes] = useState([])
+  // const [lastMonthIncomes, setLastMonthIncomes] = useState([])
   const [lastMonthTotalIncomes, setLastMonthTotalIncomes] = useState(0)
   const [incomesVariation, setIncomesVariation] = useState(0)
 
@@ -31,13 +39,6 @@ function Dashboard(props) {
     const initial = Number(props.account.amount)
     const variation = ((userCapital - initial) / initial) * 100
     setCapitalVariation(variation)
-    const test = await personalFinanceService.computeUserMonthIncomesByCategory(
-      props.user.id,
-      props.account.currency.ticker,
-      2,
-      2021
-    )
-    console.log(test)
   }, [])
 
   useEffect(async () => {
@@ -77,7 +78,7 @@ function Dashboard(props) {
       now.getMonth() + 1,
       now.getFullYear()
     )
-    setLastMonthIncomes(incomesByCategory)
+    // setLastMonthIncomes(incomesByCategory)
 
     var incomes = 0
     for (const i in incomesByCategory) {
@@ -98,12 +99,31 @@ function Dashboard(props) {
 
     const variation = ((incomes - prevIncomes) / prevIncomes) * 100
     setIncomesVariation(variation)
-
-    console.log(lastMonthExpenses, lastMonthIncomes)
   }, [])
 
+  function parseDataToDoublePie(data) {
+    const dataToPie = []
+    for (const i in data) {
+      for (const j in data[i].subcategories) {
+        if (data[i].subcategories[j].expenses > 0) {
+          dataToPie.push({
+            value: data[i].subcategories[j].expenses,
+            type: data[i].name,
+            name: data[i].subcategories[j].name,
+          })
+        }
+      }
+    }
+    return dataToPie
+  }
+
   return (
-    <Box bg={useColorModeValue('gray.50', 'inherit')} minH="100vh" width="100%">
+    <Flex
+      bg={useColorModeValue('gray.50', 'inherit')}
+      minH="100vh"
+      width="100%"
+      direction="column"
+    >
       <Center pt="50px">
         <StatBadge
           label="Total Capital"
@@ -115,7 +135,7 @@ function Dashboard(props) {
       <Stack
         mt="30px"
         direction={['column', 'row', 'row']}
-        spacing={8}
+        spacing={[8, 20, 20]}
         justify="center"
         align="center"
       >
@@ -140,7 +160,25 @@ function Dashboard(props) {
           percent={incomesVariation}
         />
       </Stack>
-    </Box>
+      <Box
+        bg={useColorModeValue('white', 'gray.700')}
+        shadow="base"
+        rounded="md"
+        mt={8}
+        px={2}
+        width={['100%', '100%', '680px']}
+        alignSelf="center"
+      >
+        <Heading as="h4" size="md" mt={4}>
+          {`${now
+            .toLocaleString('default', {
+              month: 'short',
+            })
+            .capitalize()} Expenses`}
+        </Heading>
+        <DoublePieChart data={parseDataToDoublePie(lastMonthExpenses)} />
+      </Box>
+    </Flex>
   )
 }
 
