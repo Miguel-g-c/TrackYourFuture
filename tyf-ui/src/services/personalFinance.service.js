@@ -222,9 +222,9 @@ class PersonalFinanceService {
   }
 
   async computeUserTotalExpenses(userID, accountCurrency) {
-    var expenses = 0
-    var evaluated = 0
-    var page = 0
+    let expenses = 0
+    let evaluated = 0
+    let page = 0
     const expensesResponse = await this.fetchUserExpenses(userID, 1)
     while (evaluated < expensesResponse.count) {
       page++
@@ -249,9 +249,9 @@ class PersonalFinanceService {
   }
 
   async computeUserTotalIncomes(userID, accountCurrency) {
-    var incomes = 0
-    var evaluated = 0
-    var page = 0
+    let incomes = 0
+    let evaluated = 0
+    let page = 0
     const incomesResponse = await this.fetchUserIncomes(userID, 1)
     while (evaluated < incomesResponse.count) {
       page++
@@ -304,8 +304,8 @@ class PersonalFinanceService {
     const min_date = new Date([month, 1, year])
     const max_date = new Date([month + 1, 1, year])
 
-    var evaluated = 0
-    var page = 0
+    let evaluated = 0
+    let page = 0
     const expensesResponse = await this.fetchUserExpenses(
       userID,
       1,
@@ -326,7 +326,7 @@ class PersonalFinanceService {
       )
       for (const i in expensesData.results) {
         if (expensesData.results[i].currency.ticker === accountCurrency) {
-          var category = responseCategories.find(
+          let category = responseCategories.find(
             cat => cat.id === expensesData.results[i].category.id
           )
           category.expenses += Number(expensesData.results[i].amount)
@@ -341,7 +341,7 @@ class PersonalFinanceService {
             accountCurrency,
             ticker
           )
-          var category2 = responseCategories.find(
+          let category2 = responseCategories.find(
             cat => cat.id === expensesData.results[i].category.id
           )
           category2.expenses += expense / rate
@@ -369,8 +369,8 @@ class PersonalFinanceService {
     const min_date = new Date([month, 1, year])
     const max_date = new Date([month + 1, 1, year])
 
-    var evaluated = 0
-    var page = 0
+    let evaluated = 0
+    let page = 0
     const incomesResponse = await this.fetchUserIncomes(
       userID,
       1,
@@ -389,7 +389,7 @@ class PersonalFinanceService {
       )
       for (const i in incomesData.results) {
         if (incomesData.results[i].currency.ticker === accountCurrency) {
-          var category = responseCategories.find(
+          let category = responseCategories.find(
             cat => cat.id === incomesData.results[i].category.id
           )
           category.incomes += Number(incomesData.results[i].amount)
@@ -401,7 +401,7 @@ class PersonalFinanceService {
             accountCurrency,
             ticker
           )
-          var category2 = responseCategories.find(
+          let category2 = responseCategories.find(
             cat => cat.id === incomesData.results[i].category.id
           )
           category2.incomes += income / rate
